@@ -1,0 +1,25 @@
+{
+        "version": 2,
+        "name": "knowledge-management-platform",
+        "cleanUrls": true,
+        "headers": [
+            {
+                "source": "/(.*)",
+                "headers": [
+                    {
+                        "key": "Access-Control-Allow-Origin",
+                        "value": "*"
+                    },
+                    {
+                        "key": "X-Frame-Options",
+                        "value": "DENY"
+                    },
+                    {
+                        "key": "X-Content-Type-Options",
+                        "value": "nosniff"
+                    }
+                ]
+            }
+        ]
+    }
+    

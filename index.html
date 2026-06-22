@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة إدارة المعرفة التفاعلية | Dynamic Forms</title>
+    <!-- خط Cairo من Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- ملف التنسيقات الرئيسي -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- مكتبة وملف إعدادات Supabase -->
+    <script src="config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- الشريط الجانبي (Sidebar) -->
+        <aside class="sidebar">
+            <div class="logo-section">
+                <div class="logo-icon">KM</div>
+                <div class="logo-text">
+                    <h1>إدارة المعرفة</h1>
+                    <p>المنصة التفاعلية الموحدة</p>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <li class="nav-item active">
+                    <a data-target="dashboard-page">
+                        <span>📊</span> لوحة القيادة الرئيسية
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a data-target="forms-page">
+                        <span>📝</span> تعبئة النماذج المعرفية
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a data-target="admin-page">
+                        <span>📂</span> لوحة إدارة الطلبات
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a data-target="db-schema-page">
+                        <span>💾</span> مخطط قاعدة البيانات
+                    </a>
+                </li>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <p>الإصدار 1.1.0 &copy; 2026</p>
+                <p>إدارة المعرفة والابتكار</p>
+            </div>
+        </aside>
+
+        <!-- المحتوى الرئيسي للمنصة -->
+        <main class="main-content">
+            
+            <!-- الهيدر العلوي للمنصة -->
+            <header class="app-header">
+                <div class="header-title">
+                    <h2>بوابة نماذج إدارة المعرفة الإلكترونية</h2>
+                </div>
+                <div class="header-actions">
+                    <!-- مؤشر حالة الاتصال بـ Supabase -->
+                    <div id="supabase-status-badge" class="user-badge" style="background-color: #fef3c7; color: #b45309; font-weight: 700; border: 1px solid #fde68a;">
+                        جاري فحص الاتصال...
+                    </div>
+                    <div class="user-badge">مدير إدارة المعرفة</div>
+                </div>
+            </header>
+
+            <!-- محتوى الصفحات الديناميكي -->
+            <div class="content-body">
+
+                <!-- ==================== صفحة لوحة القيادة ==================== -->
+                <section id="dashboard-page" class="app-page active">
+                    <div class="card" style="background: linear-gradient(135deg, var(--primary-color), var(--primary-light)); color: white;">
+                        <h2 style="font-weight: 800; font-size: 24px; margin-bottom: 8px;">مرحباً بك في المنصة الذكية لإدارة المعرفة</h2>
+                        <p style="font-size: 14px; opacity: 0.9; max-width: 800px;">
+                            تتيح لك هذه المنصة تحويل جميع النماذج الورقية الخاصة بحصر وتوثيق المعرفة والدروس المستفادة إلى نماذج ديناميكية تفاعلية مطابقة تماماً للأصل، مع تتبع نسب الإنجاز، التحقق الذكي من صحة البيانات، وإمكانية الحفظ التلقائي المؤقت وتصدير التقارير الإحصائية.
+                        </p>
+                    </div>
+
+                    <h3 style="font-size: 18px; font-weight: 700; margin: 24px 0 16px 0; color: var(--primary-color);">اختر أحد النماذج المعتمدة للبدء في تعبئته:</h3>
+
+                    <div class="dashboard-grid">
+                        <!-- نموذج 1 -->
+                        <div class="dashboard-card" onclick="document.querySelector('[data-target=forms-page]').click(); document.querySelector('[data-form=form1]').click();">
+                            <div class="card-icon">1️⃣</div>
+                            <div class="card-title">نموذج حصر المعرفة والعمليات الحرجة</div>
+                            <div class="card-desc">يُسخدم في الربع الأول Q1 أثناء جلسات الحصر مع مديري الإدارات لتحديد نوع ومستوى خطورة العمليات.</div>
+                            <div class="card-meta">
+                                <span>تعبئة النموذج</span>
+                                <span>⬅️</span>
+                            </div>
+                        </div>
+
+                        <!-- نموذج 2 -->
+                        <div class="dashboard-card" onclick="document.querySelector('[data-target=forms-page]').click(); document.querySelector('[data-form=form2]').click();">
+                            <div class="card-icon">2️⃣</div>
+                            <div class="card-title">قالب توثيق المعرفة / الإجراءات التشغيلية</div>
+                            <div class="card-desc">قالب توثيق المعارف والعمليات الإجرائية للمنح والمشاريع والإجراءات المالية للموظفين بشكل منظم.</div>
+                            <div class="card-meta">
+                                <span>تعبئة النموذج</span>
+                                <span>⬅️</span>
+                            </div>
+                        </div>
+
+                        <!-- نموذج 3 -->
+                        <div class="dashboard-card" onclick="document.querySelector('[data-target=forms-page]').click(); document.querySelector('[data-form=form3]').click();">
+                            <div class="card-icon">3️⃣</div>
+                            <div class="card-title">بطاقة تقييم جودة المعرفة</div>
+                            <div class="card-desc">بطاقة تقييم الأصول المعرفية والتأكد من مطابقتها لمعايير الدقة، الاكتمال، الوضوح، الحداثة، والتصنيف.</div>
+                            <div class="card-meta">
+                                <span>تعبئة النموذج</span>
+                                <span>⬅️</span>
+                            </div>
+                        </div>
+
+                        <!-- نموذج 4 -->
+                        <div class="dashboard-card" onclick="document.querySelector('[data-target=forms-page]').click(); document.querySelector('[data-form=form4]').click();">
+                            <div class="card-icon">4️⃣</div>
+                            <div class="card-title">نموذج حصر الدروس المستفادة والتوصيات</div>
+                            <div class="card-desc">يُستخدم عند إغلاق المشاريع والعمليات لتوثيق الفروقات بين المخطط والفعلي وتحديد جذور الأسباب والتوصيات.</div>
+                            <div class="card-meta">
+                                <span>تعبئة النموذج</span>
+                                <span>⬅️</span>
+                            </div>
+                        </div>
+
+                        <!-- نموذج 5 -->
+                        <div class="dashboard-card" onclick="document.querySelector('[data-target=forms-page]').click(); document.querySelector('[data-form=form5]').click();">
+                            <div class="card-icon">5️⃣</div>
+                            <div class="card-title">خطة مشروع توثيق المعرفة الاستراتيجية</div>
+                            <div class="card-desc">تُستخدم في المرحلة السادسة ألتمتة ومتابعة مشاريع التوثيق الكبرى وتتبع الجداول الزمنية للمراحل الرئيسية.</div>
+                            <div class="card-meta">
+                                <span>تعبئة النموذج</span>
+                                <span>⬅️</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- ==================== صفحة تعبئة النماذج ==================== -->
+                <section id="forms-page" class="app-page">
+                    
+                    <!-- شريط تحديد النموذج للتعبئة -->
+                    <div class="form-selector-bar">
+                        <button class="selector-btn active" data-form="form1">النموذج 1: حصر العمليات</button>
+                        <button class="selector-btn" data-form="form2">النموذج 2: توثيق المعرفة</button>
+                        <button class="selector-btn" data-form="form3">النموذج 3: بطاقة الجودة</button>
+                        <button class="selector-btn" data-form="form4">النموذج 4: الدروس المستفادة</button>
+                        <button class="selector-btn" data-form="form5">النموذج 5: خطة توثيق المعرفة</button>
+                    </div>
+
+                    <!-- ==================== النموذج 1 ==================== -->
+                    <div id="form1-workspace" class="form-workspace active">
+                        <div class="card">
+                            <div class="form-header">
+                                <div class="form-header-title">
+                                    <h3>النموذج 1: نموذج حصر المعرفة والعمليات الحرجة</h3>
+                                    <p>يُستخدم في الربع الأول Q1 أثناء جلسات الحصر مع مديري الإدارات</p>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-label">
+                                        <span>نسبة إنجاز النموذج</span>
+                                        <span id="form1-percent-label"><strong id="form1-progress-percent">0%</strong></span>
+                                    </div>
+                                    <div class="progress-track">
+                                        <div id="form1-progress-bar" class="progress-bar"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- التبويبات الداخلية للنموذج 1 -->
+                            <div class="form-tabs">
+                                <button class="form-tab-btn active" onclick="switchInnerTab('form1', 0)">بيانات العملية الحرجة</button>
+                                <button class="form-tab-btn" onclick="switchInnerTab('form1', 1)">التصنيف والمخاطر والتوثيق</button>
+                            </div>
+
+                            <!-- تبويب 1 -->
+                            <div class="form-section-content active">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="f1_dept">اسم الإدارة / القسم <span class="required-mark">*</span></label>
+                                        <input type="text" id="f1_dept" required placeholder="مثال: الإدارة المالية، إدارة الموارد البشرية">
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="f1_process">اسم العملية الحرجة <span class="required-mark">*</span></label>
+                                        <input type="text" id="f1_process" required placeholder="مثال: صرف الدفعات المالية للموردين">
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label>نوع المعرفة <span class="required-mark">*</span></label>
+                                        <div class="options-grid">
+                                            <label class="option-card">
+                                                <input type="radio" name="f1_know_type" id="f1_know_type" value="implicit" required>
+                                                <span>ضمنية (في أذهان الموظفين والخبراء)</span>
+                                            </label>
+                                            <label class="option-card">
+                                                <input type="radio" name="f1_know_type" value="explicit">
+                                                <span>صريحة (موثقة في أدلة، ملفات، أو سياسات)</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- تبويب 2 -->
+                            <div class="form-section-content">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="f1_expert_name">مالك المعرفة / الخبير (الاسم) <span class="required-mark">*</span></label>
+                                        <input type="text" id="f1_expert_name" required placeholder="أدخل اسم الخبير المسؤول">
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="f1_expert_job">المسمى الوظيفي للخبير <span class="required-mark">*</span></label>
+                                        <input type="text" id="f1_expert_job" required placeholder="مثال: كبير أخصائيي التقارير المالية">
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="f1_storage">مكان التخزين الحالي للملفات <span class="required-mark">*</span></label>
+                                        <input type="text" id="f1_storage" required placeholder="مثال: SharePoint، ملفات ورقية في أرشيف القسم">
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label>مستوى الأهمية / المخاطرة في حال فقدان المعرفة <span class="required-mark">*</span></label>
+                                        <div class="options-grid">
+                                            <label class="option-card">
+                                                <input type="radio" name="f1_risk" id="f1_risk" value="very_high" required>
+                                                <span style="color: var(--danger); font-weight: 700;">عالي جداً (تتوقف العملية نهائياً)</span>
+                                            </label>
+                                            <label class="option-card">
+                                                <input type="radio" name="f1_risk" value="medium">
+                                                <span style="color: var(--warning); font-weight: 700;">متوسط (تتأثر الكفاءة والوقت)</span>
+                                            </label>
+                                            <label class="option-card">
+                                                <input type="radio" name="f1_risk" value="low">
+                                                <span style="color: var(--success); font-weight: 700;">منخفض (يسهل استبدالها)</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label>حالة التوثيق الحالية للإجراء <span class="required-mark">*</span></label>
+                                        <div class="options-grid">
+                                            <label class="option-card">
+                                                <input type="radio" name="f1_doc_status" id="f1_doc_status" value="undocumented" required>
+                                                <span>غير موثقة مطلقاً</span>
+                                            </label>
+                                            <label class="option-card">
+                                                <input type="radio" name="f1_doc_status" value="partially_documented">
+                                                <span>موثقة جزئياً (مسودات أو مذكرات غير مكتملة)</span>
+                                            </label>
+                                            <label class="option-card">
+                                                <input type="radio" name="f1_doc_status" value="documented_approved">
+                                                <span>موثقة ومعتمدة رسمياً</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="f1_notes">ملاحظات فريق الحصر والتقييم</label>
+                                        <textarea id="f1_notes" rows="3" placeholder="أدخل أي ملاحظات إضافية ترتبط بعملية الحصر..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- الأزرار السفلية -->
+                            <div class="form-footer-actions">
+                                <button type="button" class="btn btn-secondary" onclick="resetActiveForm()">حذف المسودة والبدء مجدداً</button>
+                                <button type="button" class="btn btn-primary" onclick="openReviewPanel()">مراجعة البيانات واعتمادها ➡️</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- ==================== النموذج 2 ==================== -->
+                    <div id="form2-workspace" class="form-workspace">
+                        <div class="card">
+                            <div class="form-header">
+                                <div class="form-header-title">
+                                    <h3>النموذج 2: قالب توثيق المعرفة / الإجراءات التشغيلية</h3>
+                                    <p>ُيستخدم لتوثيق المعارف المالية وإجراءات المنح والمشاريع</p>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-label">
+                                        <span>نسبة إنجاز النموذج</span>
+                                        <span id="form2-percent-label"><strong id="form2-progress-percent">0%</strong></span>
+                                    </div>
+                                    <div class="progress-track">
+                                        <div id="form2-progress-bar" class="progress-bar"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- التبويبات الداخلية للنموذج 2 -->
+                            <div class="form-tabs">
+                                <button class="form-tab-btn active" onclick="switchInnerTab('form2', 0)">1. البيانات الأساسية والمعتمد</button>
+                                <button class="form-tab-btn" onclick="switchInnerTab('form2', 1)">2. المحتوى الفني والنطاق</button>
+                                <button class="form-tab-btn" onclick="switchInnerTab('form2', 2)">3. الخطوات الإجرائية والأدوات</button>
+                            </div>
+
+                            <!-- تبويب 1 -->
+                            <div class="form-section-content active">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="f2_title">عنوان المعرفة / الإجراء <span class="required-mark">*</span></label>
+                                        <input type="text" id="f2_title" required placeholder="مثال: إجراءات صرف المنح المخصصة للجمعيات">
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="f2_code">الرقم المرجعي / الكود <span class="required-mark">*</span></label>
+                                        <input type="text" id="f2_code" required placeholder="مثال: SOP-FIN-02">
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="f2_dept">الإدارة المالكة للمستند <span class="required-mark">*</span></label>
+                                        <input type="text" id="f2_dept" required placeholder="مثال: إدارة المالية والاستثمار">
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="f2_expert_name">الخبير المعتمد للمحتوى <span class="required-mark">*</span></label>
+                                        <input type="text" id="f2_expert_name" required placeholder="أدخل اسم الخبير المعتمد">
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="f2_expert_sig">التوقيع المعتمد (الاسم المكتوب) <span class="required-mark">*</span></label>
+                                        <input type="text" id="f2_expert_sig" required placeholder="أدخل توقيع الخبير إلكترونياً">
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="f2_expert_date">تاريخ التوقيع والاعتماد <span class="required-mark">*</span></label>
+                                        <input type="date" id="f2_expert_date" required>
+                                        <span class="error-msg"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- تبويب 2 -->
+                            <div class="form-section-content">
+                                <div class="form-grid">
+                                    <div class="form-group full-width">
+                                        <label for="f2_goal">الهدف من هذا الإجراء المعرفي <span class="required-mark">*</span></label>
+                                        <textarea id="f2_goal" rows="3" required placeholder="أدخل الفائدة والهدف الأساسي من توثيق هذا الإجراء..."></textarea>
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="f2_scope">نطاق التطبيق <span class="required-mark">*</span></label>
+                                        <textarea id="f2_scope" rows="3" required placeholder="حدد أين يُطبق هذا الإجراء والجهات المستهدفة به..."></textarea>
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="f2_inputs">المتطلبات المدخلة والمدخلات الرئيسية <span class="required-mark">*</span></label>
+                                        <textarea id="f2_inputs" rows="3" required placeholder="مثال: النماذج والموافقات والملفات التي يجب توفرها للبدء بالإجراء..."></textarea>
+                                        <span class="error-msg"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- تبويب 3 -->
+                            <div class="form-section-content">
+                                <div class="form-group full-width" style="margin-bottom: 24px;">
+                                    <label>الخطوات الإجرائية بالتفصيل والترتيب <span class="required-mark">*</span></label>
+                                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">أدخل خطوات الإجراء مرتبة، يمكنك إضافة خطوات إضافية ديناميكياً:</p>
+                                    <div id="f2_steps_container" class="dynamic-list-container">
+                                        <!-- الخطوات سيتم توليدها ديناميكياً عبر JS -->
+                                    </div>
+                                    <button type="button" id="f2_add_step_btn" class="btn btn-secondary" style="margin-top: 12px; width: fit-content;">➕ إضافة خطوة جديدة</button>
+                                </div>
+                                <div class="form-grid">
+                                    <div class="form-group full-width">
+                                        <label for="f2_tools">الأدوات والنماذج والأنظمة المرتبطة بالعملية <span class="required-mark">*</span></label>
+                                        <textarea id="f2_tools" rows="3" required placeholder="مثال: نظام ERP، بوابة الخدمات الإلكترونية، إكسل حساب الرواتب..."></textarea>
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="f2_tips">نصائح الخبراء والأخطاء الشائعة لتفاديها <span class="required-mark">*</span></label>
+                                        <textarea id="f2_tips" rows="3" required placeholder="أدخل توصيات لتسهيل العمل وتجنب المشاكل المتكررة..."></textarea>
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="f2_review_date">تاريخ المراجعة القادم والمستقبلي <span class="required-mark">*</span></label>
+                                        <input type="date" id="f2_review_date" required>
+                                        <span class="error-msg">تاريخ المراجعة يجب أن يكون في المستقبل</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- الأزرار السفلية -->
+                            <div class="form-footer-actions">
+                                <button type="button" class="btn btn-secondary" onclick="resetActiveForm()">حذف المسودة والبدء مجدداً</button>
+                                <button type="button" class="btn btn-primary" onclick="openReviewPanel()">مراجعة البيانات واعتمادها ➡️</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- ==================== النموذج 3 ==================== -->
+                    <div id="form3-workspace" class="form-workspace">
+                        <div class="card">
+                            <div class="form-header">
+                                <div class="form-header-title">
+                                    <h3>النموذج 3: بطاقة تقييم جودة المعرفة</h3>
+                                    <p>تستخدم لتقييم الأصول المعرفية المدرجة في خطة المعرفة</p>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-label">
+                                        <span>نسبة إنجاز النموذج</span>
+                                        <span id="form3-percent-label"><strong id="form3-progress-percent">0%</strong></span>
+                                    </div>
+                                    <div class="progress-track">
+                                        <div id="form3-progress-bar" class="progress-bar"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- التبويبات الداخلية للنموذج 3 -->
+                            <div class="form-tabs">
+                                <button class="form-tab-btn active" onclick="switchInnerTab('form3', 0)">بيانات التقييم ومعايير الجودة</button>
+                                <button class="form-tab-btn" onclick="switchInnerTab('form3', 1)">النتيجة النهائية وقرار الاعتماد</button>
+                            </div>
+
+                            <!-- تبويب 1 -->
+                            <div class="form-section-content active">
+                                <div class="form-grid" style="margin-bottom: 24px;">
+                                    <div class="form-group">
+                                        <label for="f3_asset">اسم الأصل المعرفي الخاضع للتقييم <span class="required-mark">*</span></label>
+                                        <input type="text" id="f3_asset" required placeholder="مثال: دليل سياسات الاستثمار المالي">
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="f3_assessor">اسم المقيم / خبير الجودة <span class="required-mark">*</span></label>
+                                        <input type="text" id="f3_assessor" required placeholder="أدخل اسم المقيم المسؤول">
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="f3_date">تاريخ التقييم <span class="required-mark">*</span></label>
+                                        <input type="date" id="f3_date" required>
+                                        <span class="error-msg"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label>معايير التقييم الذكية (قيم كل معيار من 1 إلى 5 حيث 1=ضعيف جداً، 3=مقبول، 5=ممتاز) <span class="required-mark">*</span></label>
+                                    
+                                    <table class="rating-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 20%;">معيار الجودة</th>
+                                                <th style="width: 50%;">الوصف التفصيلي للمعيار</th>
+                                                <th style="width: 30%;">التقييم والدرجة (5-1)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>الدقة</strong></td>
+                                                <td>هل المعلومات صحيحة، خالية من الأخطاء، ومطابقة للواقع؟</td>
+                                                <td>
+                                                    <div class="rating-options" data-field="f3_acc">
+                                                        <button type="button" class="rating-btn" data-value="1">1</button>
+                                                        <button type="button" class="rating-btn" data-value="2">2</button>
+                                                        <button type="button" class="rating-btn" data-value="3">3</button>
+                                                        <button type="button" class="rating-btn" data-value="4">4</button>
+                                                        <button type="button" class="rating-btn" data-value="5">5</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>الاكتمال</strong></td>
+                                                <td>هل تم تغطية جميع الجوانب؟ هل تم تعبئة جميع الحقول المطلوبة؟</td>
+                                                <td>
+                                                    <div class="rating-options" data-field="f3_comp">
+                                                        <button type="button" class="rating-btn" data-value="1">1</button>
+                                                        <button type="button" class="rating-btn" data-value="2">2</button>
+                                                        <button type="button" class="rating-btn" data-value="3">3</button>
+                                                        <button type="button" class="rating-btn" data-value="4">4</button>
+                                                        <button type="button" class="rating-btn" data-value="5">5</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>الوضوح</strong></td>
+                                                <td>هل اللغة واضحة، خالية من التعقيد، وسهلة الفهم للمستخدم الجديد؟</td>
+                                                <td>
+                                                    <div class="rating-options" data-field="f3_clarity">
+                                                        <button type="button" class="rating-btn" data-value="1">1</button>
+                                                        <button type="button" class="rating-btn" data-value="2">2</button>
+                                                        <button type="button" class="rating-btn" data-value="3">3</button>
+                                                        <button type="button" class="rating-btn" data-value="4">4</button>
+                                                        <button type="button" class="rating-btn" data-value="5">5</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>الحداثة</strong></td>
+                                                <td>هل المعلومات محدثة وتعكس الممارسات الحالية (وليست قديمة)؟</td>
+                                                <td>
+                                                    <div class="rating-options" data-field="f3_recency">
+                                                        <button type="button" class="rating-btn" data-value="1">1</button>
+                                                        <button type="button" class="rating-btn" data-value="2">2</button>
+                                                        <button type="button" class="rating-btn" data-value="3">3</button>
+                                                        <button type="button" class="rating-btn" data-value="4">4</button>
+                                                        <button type="button" class="rating-btn" data-value="5">5</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>سهولة الوصول والتصنيف</strong></td>
+                                                <td>هل تم استخدام الكلمات المفتاحية والفئات والوسوم الصحيحة؟</td>
+                                                <td>
+                                                    <div class="rating-options" data-field="f3_access">
+                                                        <button type="button" class="rating-btn" data-value="1">1</button>
+                                                        <button type="button" class="rating-btn" data-value="2">2</button>
+                                                        <button type="button" class="rating-btn" data-value="3">3</button>
+                                                        <button type="button" class="rating-btn" data-value="4">4</button>
+                                                        <button type="button" class="rating-btn" data-value="5">5</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- تبويب 2 -->
+                            <div class="form-section-content">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="f3_total_score_display">مجموع الدرجات النهائي (تلقائي من 25) <span class="required-mark">*</span></label>
+                                        <input type="text" id="f3_total_score_display" readonly style="font-weight: 700; font-size: 16px; text-align: center; background-color: #f1f5f9;" placeholder="بانتظار تقييم كافة الحقول">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>قرار الاعتماد النهائي للاستخدام والنشر <span class="required-mark">*</span></label>
+                                        <div id="f3_decision_display" class="badge-status" style="padding: 12px; text-align: center; font-size: 14px; font-weight: 700; border-radius: 8px; background-color: #e2e8f0; color: var(--text-muted);">
+                                            بانتظار اكتمال التقييم
+                                        </div>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="f3_notes">ملاحظات ومقترحات المقيم للتحسين</label>
+                                        <textarea id="f3_notes" rows="4" placeholder="أدخل أي ملاحظات ترتبط بنتائج التقييم أو تعديلات مطلوبة..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- الأزرار السفلية -->
+                            <div class="form-footer-actions">
+                                <button type="button" class="btn btn-secondary" onclick="resetActiveForm()">حذف المسودة والبدء مجدداً</button>
+                                <button type="button" class="btn btn-primary" onclick="openReviewPanel()">مراجعة البيانات واعتمادها ➡️</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- ==================== النموذج 4 ==================== -->
+                    <div id="form4-workspace" class="form-workspace">
+                        <div class="card">
+                            <div class="form-header">
+                                <div class="form-header-title">
+                                    <h3>النموذج 4: نموذج حصر الدروس المستفادة والتوصيات</h3>
+                                    <p>يُستخدم عند إغلاق المشاريع الكبرى والعمليات التشغيلية</p>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-label">
+                                        <span>نسبة إنجاز النموذج</span>
+                                        <span id="form4-percent-label"><strong id="form4-progress-percent">0%</strong></span>
+                                    </div>
+                                    <div class="progress-track">
+                                        <div id="form4-progress-bar" class="progress-bar"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- التبويبات الداخلية للنموذج 4 -->
+                            <div class="form-tabs">
+                                <button class="form-tab-btn active" onclick="switchInnerTab('form4', 0)">بيانات المشروع والفرق والمقارنات</button>
+                                <button class="form-tab-btn" onclick="switchInnerTab('form4', 1)">الدرس المستفاد وتطبيق التوصيات</button>
+                            </div>
+
+                            <!-- تبويب 1 -->
+                            <div class="form-section-content active">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="f4_name">اسم المشروع / العملية المغلقة <span class="required-mark">*</span></label>
+                                        <input type="text" id="f4_name" required placeholder="مثال: مشروع أتمتة مستندات الموارد البشرية">
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="f4_close_date">تاريخ الإغلاق الفعلي <span class="required-mark">*</span></label>
+                                        <input type="date" id="f4_close_date" required>
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="f4_leader">قائد الفريق / مدير المشروع المسؤول <span class="required-mark">*</span></label>
+                                        <input type="text" id="f4_leader" required placeholder="أدخل اسم قائد الفريق">
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="f4_planned">ما كان مخططاً له؟ (الأهداف الأصلية والمخرجات المتوقعة) <span class="required-mark">*</span></label>
+                                        <textarea id="f4_planned" rows="3" required placeholder="صف الأهداف الرئيسية التي تم التخطيط لها في ميثاق المشروع..."></textarea>
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="f4_actual">ما الذي حدث فعلياً؟ (النتائج والمخرجات الفعلية التي تم تحقيقها) <span class="required-mark">*</span></label>
+                                        <textarea id="f4_actual" rows="3" required placeholder="صف النتائج الفعلية والمشاكل التي واجهت الفريق عند التسليم..."></textarea>
+                                        <span class="error-msg"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- تبويب 2 -->
+                            <div class="form-section-content">
+                                <div class="form-grid">
+                                    <div class="form-group full-width">
+                                        <label for="f4_reason">لماذا حدث هذا الفرق؟ (جذور وأسباب التباين بين المخطط والفعلي) <span class="required-mark">*</span></label>
+                                        <textarea id="f4_reason" rows="3" required placeholder="مثال: تأخر في استلام التجهيزات الفنية، عدم وضوح المتطلبات..."></textarea>
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="f4_lesson">الدرس المستفاد المستخلص <span class="required-mark">*</span></label>
+                                        <textarea id="f4_lesson" rows="3" required placeholder="صف الدرس المستفاد الرئيسي الذي تعلمه الفريق..."></textarea>
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="f4_rec">التوصية الإجرائية المحددة للمشاريع والعمليات المستقبلية <span class="required-mark">*</span></label>
+                                        <textarea id="f4_rec" rows="3" required placeholder="حدد إجراءً عملياً يمكن اتخاذه مستقبلاً لتجنب هذه المشاكل..."></textarea>
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="f4_owner">من سيتبنى تطبيق هذه التوصية؟ (المسؤول) <span class="required-mark">*</span></label>
+                                        <input type="text" id="f4_owner" required placeholder="مثال: قسم الجودة، مكتب إدارة المشاريع">
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>حالة إغلاق الدرس المستفاد وتوثيقه <span class="required-mark">*</span></label>
+                                        <div class="options-grid">
+                                            <label class="option-card">
+                                                <input type="radio" name="f4_status" id="f4_status" value="saved_repository" required>
+                                                <span>تم حفظ الدرس في المستودع المعرفي</span>
+                                            </label>
+                                            <label class="option-card">
+                                                <input type="radio" name="f4_status" value="under_followup">
+                                                <span>قيد المتابعة والتدقيق</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- الأزرار السفلية -->
+                            <div class="form-footer-actions">
+                                <button type="button" class="btn btn-secondary" onclick="resetActiveForm()">حذف المسودة والبدء مجدداً</button>
+                                <button type="button" class="btn btn-primary" onclick="openReviewPanel()">مراجعة البيانات واعتمادها ➡️</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- ==================== النموذج 5 ==================== -->
+                    <div id="form5-workspace" class="form-workspace">
+                        <div class="card">
+                            <div class="form-header">
+                                <div class="form-header-title">
+                                    <h3>النموذج 5: خطة مشروع توثيق المعرفة الاستراتيجية</h3>
+                                    <p>تستخدم في المرحلة السادسة لأتمتة ومتابعة مشاريع التوثيق الكبرى</p>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-label">
+                                        <span>نسبة إنجاز النموذج</span>
+                                        <span id="form5-percent-label"><strong id="form5-progress-percent">0%</strong></span>
+                                    </div>
+                                    <div class="progress-track">
+                                        <div id="form5-progress-bar" class="progress-bar"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- التبويبات الداخلية للنموذج 5 -->
+                            <div class="form-tabs">
+                                <button class="form-tab-btn active" onclick="switchInnerTab('form5', 0)">بيانات الخطة والأهداف</button>
+                                <button class="form-tab-btn" onclick="switchInnerTab('form5', 1)">المراحل الرئيسية للمشروع</button>
+                                <button class="form-tab-btn" onclick="switchInnerTab('form5', 2)">الموارد والمخاطر وحالة الإنجاز</button>
+                            </div>
+
+                            <!-- تبويب 1 -->
+                            <div class="form-section-content active">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="f5_name">اسم المشروع المعرفي الاستراتيجي <span class="required-mark">*</span></label>
+                                        <input type="text" id="f5_name" required placeholder="مثال: مشروع توثيق المعرفة لقطاع هندسة الطيران">
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="f5_manager">مدير المشروع المسؤول <span class="required-mark">*</span></label>
+                                        <input type="text" id="f5_manager" required placeholder="أدخل اسم مدير المشروع">
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="f5_start">تاريخ البدء المتوقع <span class="required-mark">*</span></label>
+                                        <input type="date" id="f5_start" required>
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="f5_end">تاريخ الانتهاء المستهدف <span class="required-mark">*</span></label>
+                                        <input type="date" id="f5_end" required>
+                                        <span class="error-msg">تاريخ الانتهاء يجب أن يكون بعد البدء</span>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="f5_goals">الأهداف والمخرجات المتوقعة بالتفصيل <span class="required-mark">*</span></label>
+                                        <textarea id="f5_goals" rows="3" required placeholder="حدد ما سيتم تسليمه بنهاية المشروع من أدلة أو أنظمة..."></textarea>
+                                        <span class="error-msg"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- تبويب 2 -->
+                            <div class="form-section-content">
+                                <div class="form-group full-width">
+                                    <label>تواريخ إنجاز المراحل الرئيسية للمشروع (Milestones) <span class="required-mark">*</span></label>
+                                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">يرجى تحديد التواريخ المستهدفة لكل مرحلة من المراحل الأربعة الكبرى:</p>
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="f5_date_analysis">1. تحليل المتطلبات وحصر الأصول <span class="required-mark">*</span></label>
+                                            <input type="date" id="f5_date_analysis" required>
+                                            <span class="error-msg"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="f5_date_dev">2. التطوير وأتمتة النماذج <span class="required-mark">*</span></label>
+                                            <input type="date" id="f5_date_dev" required>
+                                            <span class="error-msg"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="f5_date_test">3. الاختبار التجريبي والتشغيل الأولي <span class="required-mark">*</span></label>
+                                            <input type="date" id="f5_date_test" required>
+                                            <span class="error-msg"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="f5_date_launch">4. الإطلاق الرسمي وتدريب المستخدمين <span class="required-mark">*</span></label>
+                                            <input type="date" id="f5_date_launch" required>
+                                            <span class="error-msg"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- تبويب 3 -->
+                            <div class="form-section-content">
+                                <div class="form-grid">
+                                    <div class="form-group full-width">
+                                        <label for="f5_resources">الموارد البشرية والتقنية والمالية المطلوبة للمشروع <span class="required-mark">*</span></label>
+                                        <textarea id="f5_resources" rows="3" required placeholder="مثال: مطور ويب، خبير إدارة معرفة، ميزانية برمجيات..."></textarea>
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="f5_risks">المخاطر والمعوقات المتوقعة وخطة التعامل معها <span class="required-mark">*</span></label>
+                                        <textarea id="f5_risks" rows="3" required placeholder="أدخل المخاطر الفنية أو البشرية المتوقع حدوثها وكيف سيتم مواجهتها..."></textarea>
+                                        <span class="error-msg"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="f5_progress">نسبة الإنجاز الحالية للمشروع (%) <span class="required-mark">*</span></label>
+                                        <input type="number" id="f5_progress" min="0" max="100" required placeholder="قيمة من 0 إلى 100">
+                                        <span class="error-msg">القيمة يجب أن تكون بين 0 و 100</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>حالة ومؤشر صحة المشروع الحالي <span class="required-mark">*</span></label>
+                                        <div class="options-grid">
+                                            <label class="option-card">
+                                                <input type="radio" name="f5_status" id="f5_status" value="green" required>
+                                                <span style="color: var(--status-green); font-weight: 700;">🟢 أخضر (على المسار)</span>
+                                            </label>
+                                            <label class="option-card">
+                                                <input type="radio" name="f5_status" value="yellow">
+                                                <span style="color: var(--status-yellow); font-weight: 700;">🟡 أصفر (تأخير طفيف)</span>
+                                            </label>
+                                            <label class="option-card">
+                                                <input type="radio" name="f5_status" value="red">
+                                                <span style="color: var(--status-red); font-weight: 700;">🔴 أحمر (يحتاج تدخل)</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- الأزرار السفلية -->
+                            <div class="form-footer-actions">
+                                <button type="button" class="btn btn-secondary" onclick="resetActiveForm()">حذف المسودة والبدء مجدداً</button>
+                                <button type="button" class="btn btn-primary" onclick="openReviewPanel()">مراجعة البيانات واعتمادها ➡️</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+
+                <!-- ==================== صفحة لوحة الإدارة ==================== -->
+                <section id="admin-page" class="app-page">
+                    
+                    <!-- إعدادات الاتصال بـ Supabase -->
+                    <div class="card" style="border-color: var(--accent-color); background-color: #f0f9ff; margin-bottom: 24px;">
+                        <h4 style="color: var(--primary-color); font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                            <span>⚙️</span> إعدادات الربط السحابي مع Supabase
+                        </h4>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+                            لربط المنصة سحابياً مع Supabase وحفظ البيانات في قاعدة بيانات حقيقية بدلاً من ذاكرة المتصفح المحلية، يرجى إدخال بيانات مشروعك هنا:
+                        </p>
+                        <div class="form-grid" style="gap: 16px; margin-bottom: 16px;">
+                            <div class="form-group">
+                                <label for="settings_sb_url" style="font-size: 13px;">رابط مشروع Supabase (Supabase URL):</label>
+                                <input type="text" id="settings_sb_url" placeholder="https://xxxxxxxx.supabase.co" style="padding: 8px 12px; font-size: 13px;">
+                            </div>
+                            <div class="form-group">
+                                <label for="settings_sb_key" style="font-size: 13px;">المفتاح العام (Anon Key):</label>
+                                <input type="text" id="settings_sb_key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." style="padding: 8px 12px; font-size: 13px;">
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-primary" onclick="testAndSaveSupabaseConnection()" style="padding: 8px 16px; font-size: 13px;">💾 حفظ واختبار الاتصال السحابي</button>
+                            <button class="btn btn-danger" onclick="disconnectSupabase()" style="padding: 8px 16px; font-size: 13px;">🔌 قطع الاتصال (العودة للمحلي)</button>
+                        </div>
+                    </div>
+
+                    <div class="admin-toolbar">
+                        <div class="search-box">
+                            <input type="text" id="admin_search" placeholder="ابحث بالرقم المرجعي أو النصوص المدخلة...">
+                        </div>
+                        
+                        <div class="filter-box">
+                            <label for="admin_filter_form" style="font-size: 13px;">تصفية حسب النموذج:</label>
+                            <select id="admin_filter_form" style="width: auto; padding: 8px 16px;">
+                                <option value="all">كل النماذج</option>
+                                <option value="form1">نموذج 1: حصر العمليات</option>
+                                <option value="form2">نموذج 2: توثيق المعرفة</option>
+                                <option value="form3">نموذج 3: بطاقة الجودة</option>
+                                <option value="form4">نموذج 4: الدروس المستفادة</option>
+                                <option value="form5">نموذج 5: خطة المشروع</option>
+                            </select>
+                            
+                            <button class="btn btn-success" onclick="exportSubmissionsToExcel()">
+                                <span>📥</span> تصدير إلى Excel
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- جدول عرض الطلبات المرسلة -->
+                    <div class="table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 15%;">الرقم المرجعي</th>
+                                    <th style="width: 25%;">نوع النموذج</th>
+                                    <th style="width: 25%;">المحتوى الأساسي</th>
+                                    <th style="width: 20%;">تاريخ التقديم</th>
+                                    <th style="width: 15%;">العمليات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin_table_body">
+                                <!-- سيتم ملؤها ديناميكياً بجافا سكريبت -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+
+                <!-- ==================== صفحة مخطط قاعدة البيانات ==================== -->
+                <section id="db-schema-page" class="app-page">
+                    <div class="card">
+                        <h3 style="font-size: 18px; font-weight: 700; color: var(--primary-color); margin-bottom: 8px;">مخطط قاعدة البيانات العلائقية المنظم (Relational Database Schema)</h3>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">
+                            يمثل هذا المخطط الهيكل التنظيمي المقترح لتخزين وحفظ الطلبات في قواعد البيانات (مثل PostgreSQL أو MySQL أو SQLite).
+                            الجدول الرئيسي `submissions` يرتبط مع باقي الجداول عن طريق علاقة (1 to 1) باستخدام الرقم المرجعي للطلب.
+                        </p>
+
+                        <div class="db-schema-container">
+                            <!-- جدولsubmissions -->
+                            <div class="schema-table-card">
+                                <div class="schema-table-header">
+                                    <span>الجدول الرئيسي: submissions</span>
+                                    <span>Primary Table</span>
+                                </div>
+                                <div class="schema-table-fields">
+                                    <div class="field-row">
+                                        <span class="field-name">id</span>
+                                        <span class="field-type">VARCHAR(50) (PK)</span>
+                                        <span class="field-desc">الرقم المرجعي الفريد للطلب (مثال: KM-483921)</span>
+                                    </div>
+                                    <div class="field-row">
+                                        <span class="field-name">form_type</span>
+                                        <span class="field-type">VARCHAR(20)</span>
+                                        <span class="field-desc">نوع النموذج المعبأ (form1 إلى form5)</span>
+                                    </div>
+                                    <div class="field-row">
+                                        <span class="field-name">status</span>
+                                        <span class="field-type">VARCHAR(20)</span>
+                                        <span class="field-desc">حالة الطلب (draft أو submitted)</span>
+                                    </div>
+                                    <div class="field-row">
+                                        <span class="field-name">created_at</span>
+                                        <span class="field-type">TIMESTAMP</span>
+                                        <span class="field-desc">تاريخ الإنشاء الأولي للطلب</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- جدول النموذج 1 -->
+                            <div class="schema-table-card">
+                                <div class="schema-table-header">
+                                    <span>جدول نموذج 1: form1_critical_processes</span>
+                                    <span>FK -> submissions(id)</span>
+                                </div>
+                                <div class="schema-table-fields">
+                                    <div class="field-row">
+                                        <span class="field-name">id</span>
+                                        <span class="field-type">VARCHAR(50) (PK, FK)</span>
+                                        <span class="field-desc">معرف الطلب المرتبط</span>
+                                    </div>
+                                    <div class="field-row">
+                                        <span class="field-name">department_name</span>
+                                        <span class="field-type">VARCHAR(150)</span>
+                                        <span class="field-desc">اسم القسم أو الإدارة</span>
+                                    </div>
+                                    <div class="field-row">
+                                        <span class="field-name">process_name</span>
+                                        <span class="field-type">VARCHAR(200)</span>
+                                        <span class="field-desc">اسم العملية الحرجة المحصورة</span>
+                                    </div>
+                                    <div class="field-row">
+                                        <span class="field-name">knowledge_type</span>
+                                        <span class="field-type">VARCHAR(50)</span>
+                                        <span class="field-desc">نوع المعرفة (implicit أو explicit)</span>
+                                    </div>
+                                    <div class="field-row">
+                                        <span class="field-name">risk_level</span>
+                                        <span class="field-type">VARCHAR(30)</span>
+                                        <span class="field-desc">مستوى المخاطرة (very_high, medium, low)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- جدول النموذج 3 -->
+                            <div class="schema-table-card">
+                                <div class="schema-table-header">
+                                    <span>جدول نموذج 3: form3_quality_assessment</span>
+                                    <span>FK -> submissions(id)</span>
+                                </div>
+                                <div class="schema-table-fields">
+                                    <div class="field-row">
+                                        <span class="field-name">id</span>
+                                        <span class="field-type">VARCHAR(50) (PK, FK)</span>
+                                        <span class="field-desc">معرف الطلب المرتبط</span>
+                                    </div>
+                                    <div class="field-row">
+                                        <span class="field-name">asset_name</span>
+                                        <span class="field-type">VARCHAR(250)</span>
+                                        <span class="field-desc">اسم الأصل المعرفي الخاضع للتقييم</span>
+                                    </div>
+                                    <div class="field-row">
+                                        <span class="field-name">accuracy_score</span>
+                                        <span class="field-type">INT (1 to 5)</span>
+                                        <span class="field-desc">تقييم الدقة</span>
+                                    </div>
+                                    <div class="field-row">
+                                        <span class="field-name">total_score</span>
+                                        <span class="field-type">INT (5 to 25)</span>
+                                        <span class="field-desc">مجموع درجات المعايير الخمسة</span>
+                                    </div>
+                                    <div class="field-row">
+                                        <span class="field-name">accreditation_decision</span>
+                                        <span class="field-type">VARCHAR(50)</span>
+                                        <span class="field-desc">القرار (approved_publish, approved_conditions, rejected)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- ==================== نافذة المراجعة النهائية قبل الإرسال (Modal) ==================== -->
+    <div id="review-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>لوحة المراجعة النهائية للبيانات</h3>
+                <button type="button" class="close-modal" onclick="closeReviewModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="review-panel">
+                    <h4 style="color: var(--accent-hover); font-weight: 700; margin-bottom: 8px;">مراجعة المدخلات قبل الإرسال</h4>
+                    <p style="font-size: 12px; color: var(--text-muted);">يرجى التأكد من دقة المعلومات المدخلة. عند إرسال النموذج سيتم تخزين البيانات بشكل نهائي وتوليد رقم مرجعي.</p>
+                </div>
+                <div id="review_modal_body">
+                    <!-- سيتم ملؤها ديناميكياً عبر JS -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeReviewModal()">إغلاق وتعديل البيانات</button>
+                <button type="button" class="btn btn-success" onclick="submitActiveForm()">تأكيد وإرسال النموذج النهائي ✔️</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== نافذة تفاصيل الطلب المرسل (Modal) ==================== -->
+    <div id="details-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="details_modal_title">تفاصيل الطلب</h3>
+                <button type="button" class="close-modal" onclick="closeDetailsModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="details_modal_body">
+                <!-- سيتم ملؤها ديناميكياً عبر JS -->
+            </div>
+            <div class="modal-footer" id="details_modal_footer">
+                <!-- الأزرار الديناميكية للطباعة والإغلاق -->
+            </div>
+        </div>
+    </div>
+
+    <!-- عنصر التنبيهات المنبثقة (Toast) -->
+    <div id="alert_toast" class="alert-toast">
+        رسالة تنبيهية
+    </div>
+
+    <!-- ملف الجافا سكريبت الرئيسي -->
+    <script src="app.js"></script>
+</body>
+</html>
