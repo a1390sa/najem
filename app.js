@@ -1657,6 +1657,7 @@ async function checkAdminSession() {
     const loginCard = document.getElementById('admin-login-card');
     const adminWorkspace = document.getElementById('admin-workspace');
     const userEmailSpan = document.getElementById('admin-user-email');
+    const errorBox = document.getElementById('admin_login_error');
 
     if (!supabaseClient) {
         if (loginCard) loginCard.style.display = 'block';
@@ -1667,10 +1668,36 @@ async function checkAdminSession() {
     try {
         const { data: { session } } = await supabaseClient.auth.getSession();
         if (session && session.user) {
-            if (loginCard) loginCard.style.display = 'none';
-            if (adminWorkspace) adminWorkspace.style.display = 'block';
-            if (userEmailSpan) userEmailSpan.textContent = session.user.email;
-            await renderAdminSubmissions();
+            // الدفاع بعمق: فحص صلاحيات المراجع is_reviewer
+            let isReviewer = true;
+            try {
+                const { data: profile } = await supabaseClient
+                    .from('profiles')
+                    .select('is_reviewer')
+                    .eq('id', session.user.id)
+                    .single();
+                if (profile && profile.is_reviewer === false) {
+                    isReviewer = false;
+                }
+            } catch (pErr) {
+                // إذا لم يوجد جدول profiles، الاعتماد على المصادقة الناجحة
+                isReviewer = true;
+            }
+
+            if (isReviewer) {
+                if (loginCard) loginCard.style.display = 'none';
+                if (adminWorkspace) adminWorkspace.style.display = 'block';
+                if (userEmailSpan) userEmailSpan.textContent = session.user.email;
+                await renderAdminSubmissions();
+            } else {
+                if (loginCard) loginCard.style.display = 'block';
+                if (adminWorkspace) adminWorkspace.style.display = 'none';
+                if (userEmailSpan) userEmailSpan.textContent = '';
+                if (errorBox) {
+                    errorBox.textContent = 'الحساب الحالي لا يمتلك صلاحية مراجع معتمد (Access Denied: is_reviewer = false)';
+                    errorBox.style.display = 'block';
+                }
+            }
         } else {
             if (loginCard) loginCard.style.display = 'block';
             if (adminWorkspace) adminWorkspace.style.display = 'none';
