@@ -32,18 +32,9 @@
 4. ألصق الكود في محرر SQL في Supabase واضغط على زر **Run** (أو الاختصار Ctrl+Enter).
 5. تأكد من ظهور رسالة نجاح إنشاء الجداول بنجاح.
 
-### الخطوة 3: إعداد سياسات الأمان (Row Level Security - RLS)
-بشكل افتراضي، تفعل Supabase أمان الجداول مما يمنع القراءة والكتابة من المتصفح بدون مصادقة. لتسهيل بدء العمل وتجربة المنصة، يمكنك تعطيل RLS للجداول مؤقتاً لتسمح للمنصة بالاتصال المباشر عبر المفتاح العام:
-- في الـ SQL Editor في Supabase، افتح سكريبت جديد وقم بتشغيل الأوامر التالية لتعطيل الحماية مؤقتاً للجداول:
-```sql
-ALTER TABLE submissions DISABLE ROW LEVEL SECURITY;
-ALTER TABLE form1_critical_processes DISABLE ROW LEVEL SECURITY;
-ALTER TABLE form2_knowledge_documentation DISABLE ROW LEVEL SECURITY;
-ALTER TABLE form2_steps DISABLE ROW LEVEL SECURITY;
-ALTER TABLE form3_quality_assessment DISABLE ROW LEVEL SECURITY;
-ALTER TABLE form4_lessons_learned DISABLE ROW LEVEL SECURITY;
-ALTER TABLE form5_strategic_project_plan DISABLE ROW LEVEL SECURITY;
-```
+### الخطوة 3: إعداد سياسات الأمان الصريحة (Row Level Security - RLS)
+لتأمين البيانات وتطبيق أفضل الممارسات الأمنية (التوصية C-01 في تقرير الأمان):
+- يتم تفعيل RLS وإنشاء سياسات الوصول الصريحة للقراءة والإضافة آلياً عند تشغيل ملف **[database.sql](file:///d:/doc/m9/مجلد جديد/database.sql)** في SQL Editor بمشروع Supabase الخاص بنجم.
 
 ---
 
