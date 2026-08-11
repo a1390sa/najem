@@ -102,3 +102,47 @@ CREATE TABLE form5_strategic_project_plan (
 CREATE INDEX idx_submissions_type ON submissions(form_type);
 CREATE INDEX idx_submissions_status ON submissions(status);
 CREATE INDEX idx_submissions_created ON submissions(created_at);
+
+-- =========================================================================
+-- تفعيل سياسات الأمان على مستوى الصفوف (Row Level Security - RLS) [التوصية C-01]
+-- =========================================================================
+
+-- 1. تفعيل RLS على كافة الجداول
+ALTER TABLE submissions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE form1_critical_processes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE form2_knowledge_documentation ENABLE ROW LEVEL SECURITY;
+ALTER TABLE form2_steps ENABLE ROW LEVEL SECURITY;
+ALTER TABLE form3_quality_assessment ENABLE ROW LEVEL SECURITY;
+ALTER TABLE form4_lessons_learned ENABLE ROW LEVEL SECURITY;
+ALTER TABLE form5_strategic_project_plan ENABLE ROW LEVEL SECURITY;
+
+-- 2. إنشـاء سياسـات الأمان المحددة والصريحة (Explicit Policies)
+
+-- جدول submissions
+CREATE POLICY "Allow public insert to submissions" ON submissions FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "Allow public read of submissions" ON submissions FOR SELECT TO anon USING (true);
+
+-- جدول form1_critical_processes
+CREATE POLICY "Allow public insert to form1" ON form1_critical_processes FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "Allow public read of form1" ON form1_critical_processes FOR SELECT TO anon USING (true);
+
+-- جدول form2_knowledge_documentation
+CREATE POLICY "Allow public insert to form2" ON form2_knowledge_documentation FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "Allow public read of form2" ON form2_knowledge_documentation FOR SELECT TO anon USING (true);
+
+-- جدول form2_steps
+CREATE POLICY "Allow public insert to form2_steps" ON form2_steps FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "Allow public read of form2_steps" ON form2_steps FOR SELECT TO anon USING (true);
+
+-- جدول form3_quality_assessment
+CREATE POLICY "Allow public insert to form3" ON form3_quality_assessment FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "Allow public read of form3" ON form3_quality_assessment FOR SELECT TO anon USING (true);
+
+-- جدول form4_lessons_learned
+CREATE POLICY "Allow public insert to form4" ON form4_lessons_learned FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "Allow public read of form4" ON form4_lessons_learned FOR SELECT TO anon USING (true);
+
+-- جدول form5_strategic_project_plan
+CREATE POLICY "Allow public insert to form5" ON form5_strategic_project_plan FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "Allow public read of form5" ON form5_strategic_project_plan FOR SELECT TO anon USING (true);
+
