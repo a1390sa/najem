@@ -13,7 +13,7 @@
     
     <!-- مكتبة وملف إعدادات Supabase -->
     <script src="config.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.48.1/dist/umd/supabase.js" integrity="sha384-Tgoms7a53eyQOCcKXlBrA1X967mm3BHK43f3979dACl74tZlLW+O85pmfCuhfUtx" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -91,7 +91,7 @@
 
                     <div class="dashboard-grid">
                         <!-- نموذج 1 -->
-                        <div class="dashboard-card" onclick="document.querySelector('[data-target=forms-page]').click(); document.querySelector('[data-form=form1]').click();">
+                        <div class="dashboard-card" data-dash-form="form1">
                             <div class="card-icon">1️⃣</div>
                             <div class="card-title">نموذج حصر المعرفة والعمليات الحرجة</div>
                             <div class="card-desc">يُسخدم في الربع الأول Q1 أثناء جلسات الحصر مع مديري الإدارات لتحديد نوع ومستوى خطورة العمليات.</div>
@@ -102,7 +102,7 @@
                         </div>
 
                         <!-- نموذج 2 -->
-                        <div class="dashboard-card" onclick="document.querySelector('[data-target=forms-page]').click(); document.querySelector('[data-form=form2]').click();">
+                        <div class="dashboard-card" data-dash-form="form2">
                             <div class="card-icon">2️⃣</div>
                             <div class="card-title">قالب توثيق المعرفة / الإجراءات التشغيلية</div>
                             <div class="card-desc">قالب توثيق المعارف والعمليات الإجرائية للمنح والمشاريع والإجراءات المالية للموظفين بشكل منظم.</div>
@@ -113,7 +113,7 @@
                         </div>
 
                         <!-- نموذج 3 -->
-                        <div class="dashboard-card" onclick="document.querySelector('[data-target=forms-page]').click(); document.querySelector('[data-form=form3]').click();">
+                        <div class="dashboard-card" data-dash-form="form3">
                             <div class="card-icon">3️⃣</div>
                             <div class="card-title">بطاقة تقييم جودة المعرفة</div>
                             <div class="card-desc">بطاقة تقييم الأصول المعرفية والتأكد من مطابقتها لمعايير الدقة، الاكتمال، الوضوح، الحداثة، والتصنيف.</div>
@@ -124,7 +124,7 @@
                         </div>
 
                         <!-- نموذج 4 -->
-                        <div class="dashboard-card" onclick="document.querySelector('[data-target=forms-page]').click(); document.querySelector('[data-form=form4]').click();">
+                        <div class="dashboard-card" data-dash-form="form4">
                             <div class="card-icon">4️⃣</div>
                             <div class="card-title">نموذج حصر الدروس المستفادة والتوصيات</div>
                             <div class="card-desc">يُستخدم عند إغلاق المشاريع والعمليات لتوثيق الفروقات بين المخطط والفعلي وتحديد جذور الأسباب والتوصيات.</div>
@@ -135,7 +135,7 @@
                         </div>
 
                         <!-- نموذج 5 -->
-                        <div class="dashboard-card" onclick="document.querySelector('[data-target=forms-page]').click(); document.querySelector('[data-form=form5]').click();">
+                        <div class="dashboard-card" data-dash-form="form5">
                             <div class="card-icon">5️⃣</div>
                             <div class="card-title">خطة مشروع توثيق المعرفة الاستراتيجية</div>
                             <div class="card-desc">تُستخدم في المرحلة السادسة ألتمتة ومتابعة مشاريع التوثيق الكبرى وتتبع الجداول الزمنية للمراحل الرئيسية.</div>
@@ -181,8 +181,8 @@
 
                             <!-- التبويبات الداخلية للنموذج 1 -->
                             <div class="form-tabs">
-                                <button class="form-tab-btn active" onclick="switchInnerTab('form1', 0)">بيانات العملية الحرجة</button>
-                                <button class="form-tab-btn" onclick="switchInnerTab('form1', 1)">التصنيف والمخاطر والتوثيق</button>
+                                <button class="form-tab-btn active" data-inner-tab-form="form1" data-inner-tab-index="0">بيانات العملية الحرجة</button>
+                                <button class="form-tab-btn" data-inner-tab-form="form1" data-inner-tab-index="1">التصنيف والمخاطر والتوثيق</button>
                             </div>
 
                             <!-- تبويب 1 -->
@@ -275,8 +275,8 @@
 
                             <!-- الأزرار السفلية -->
                             <div class="form-footer-actions">
-                                <button type="button" class="btn btn-secondary" onclick="resetActiveForm()">حذف المسودة والبدء مجدداً</button>
-                                <button type="button" class="btn btn-primary" onclick="openReviewPanel()">مراجعة البيانات واعتمادها ➡️</button>
+                                <button type="button" class="btn btn-secondary btn-reset-form">حذف المسودة والبدء مجدداً</button>
+                                <button type="button" class="btn btn-primary btn-open-review-panel">مراجعة البيانات واعتمادها ➡️</button>
                             </div>
                         </div>
                     </div>
@@ -303,9 +303,9 @@
 
                             <!-- التبويبات الداخلية للنموذج 2 -->
                             <div class="form-tabs">
-                                <button class="form-tab-btn active" onclick="switchInnerTab('form2', 0)">1. البيانات الأساسية والمعتمد</button>
-                                <button class="form-tab-btn" onclick="switchInnerTab('form2', 1)">2. المحتوى الفني والنطاق</button>
-                                <button class="form-tab-btn" onclick="switchInnerTab('form2', 2)">3. الخطوات الإجرائية والأدوات</button>
+                                <button class="form-tab-btn active" data-inner-tab-form="form2" data-inner-tab-index="0">1. البيانات الأساسية والمعتمد</button>
+                                <button class="form-tab-btn" data-inner-tab-form="form2" data-inner-tab-index="1">2. المحتوى الفني والنطاق</button>
+                                <button class="form-tab-btn" data-inner-tab-form="form2" data-inner-tab-index="2">3. الخطوات الإجرائية والأدوات</button>
                             </div>
 
                             <!-- تبويب 1 -->
@@ -396,8 +396,8 @@
 
                             <!-- الأزرار السفلية -->
                             <div class="form-footer-actions">
-                                <button type="button" class="btn btn-secondary" onclick="resetActiveForm()">حذف المسودة والبدء مجدداً</button>
-                                <button type="button" class="btn btn-primary" onclick="openReviewPanel()">مراجعة البيانات واعتمادها ➡️</button>
+                                <button type="button" class="btn btn-secondary btn-reset-form">حذف المسودة والبدء مجدداً</button>
+                                <button type="button" class="btn btn-primary btn-open-review-panel">مراجعة البيانات واعتمادها ➡️</button>
                             </div>
                         </div>
                     </div>
@@ -424,8 +424,8 @@
 
                             <!-- التبويبات الداخلية للنموذج 3 -->
                             <div class="form-tabs">
-                                <button class="form-tab-btn active" onclick="switchInnerTab('form3', 0)">بيانات التقييم ومعايير الجودة</button>
-                                <button class="form-tab-btn" onclick="switchInnerTab('form3', 1)">النتيجة النهائية وقرار الاعتماد</button>
+                                <button class="form-tab-btn active" data-inner-tab-form="form3" data-inner-tab-index="0">بيانات التقييم ومعايير الجودة</button>
+                                <button class="form-tab-btn" data-inner-tab-form="form3" data-inner-tab-index="1">النتيجة النهائية وقرار الاعتماد</button>
                             </div>
 
                             <!-- تبويب 1 -->
@@ -552,8 +552,8 @@
 
                             <!-- الأزرار السفلية -->
                             <div class="form-footer-actions">
-                                <button type="button" class="btn btn-secondary" onclick="resetActiveForm()">حذف المسودة والبدء مجدداً</button>
-                                <button type="button" class="btn btn-primary" onclick="openReviewPanel()">مراجعة البيانات واعتمادها ➡️</button>
+                                <button type="button" class="btn btn-secondary btn-reset-form">حذف المسودة والبدء مجدداً</button>
+                                <button type="button" class="btn btn-primary btn-open-review-panel">مراجعة البيانات واعتمادها ➡️</button>
                             </div>
                         </div>
                     </div>
@@ -580,8 +580,8 @@
 
                             <!-- التبويبات الداخلية للنموذج 4 -->
                             <div class="form-tabs">
-                                <button class="form-tab-btn active" onclick="switchInnerTab('form4', 0)">بيانات المشروع والفرق والمقارنات</button>
-                                <button class="form-tab-btn" onclick="switchInnerTab('form4', 1)">الدرس المستفاد وتطبيق التوصيات</button>
+                                <button class="form-tab-btn active" data-inner-tab-form="form4" data-inner-tab-index="0">بيانات المشروع والفرق والمقارنات</button>
+                                <button class="form-tab-btn" data-inner-tab-form="form4" data-inner-tab-index="1">الدرس المستفاد وتطبيق التوصيات</button>
                             </div>
 
                             <!-- تبويب 1 -->
@@ -656,8 +656,8 @@
 
                             <!-- الأزرار السفلية -->
                             <div class="form-footer-actions">
-                                <button type="button" class="btn btn-secondary" onclick="resetActiveForm()">حذف المسودة والبدء مجدداً</button>
-                                <button type="button" class="btn btn-primary" onclick="openReviewPanel()">مراجعة البيانات واعتمادها ➡️</button>
+                                <button type="button" class="btn btn-secondary btn-reset-form">حذف المسودة والبدء مجدداً</button>
+                                <button type="button" class="btn btn-primary btn-open-review-panel">مراجعة البيانات واعتمادها ➡️</button>
                             </div>
                         </div>
                     </div>
@@ -684,9 +684,9 @@
 
                             <!-- التبويبات الداخلية للنموذج 5 -->
                             <div class="form-tabs">
-                                <button class="form-tab-btn active" onclick="switchInnerTab('form5', 0)">بيانات الخطة والأهداف</button>
-                                <button class="form-tab-btn" onclick="switchInnerTab('form5', 1)">المراحل الرئيسية للمشروع</button>
-                                <button class="form-tab-btn" onclick="switchInnerTab('form5', 2)">الموارد والمخاطر وحالة الإنجاز</button>
+                                <button class="form-tab-btn active" data-inner-tab-form="form5" data-inner-tab-index="0">بيانات الخطة والأهداف</button>
+                                <button class="form-tab-btn" data-inner-tab-form="form5" data-inner-tab-index="1">المراحل الرئيسية للمشروع</button>
+                                <button class="form-tab-btn" data-inner-tab-form="form5" data-inner-tab-index="2">الموارد والمخاطر وحالة الإنجاز</button>
                             </div>
 
                             <!-- تبويب 1 -->
@@ -790,8 +790,8 @@
 
                             <!-- الأزرار السفلية -->
                             <div class="form-footer-actions">
-                                <button type="button" class="btn btn-secondary" onclick="resetActiveForm()">حذف المسودة والبدء مجدداً</button>
-                                <button type="button" class="btn btn-primary" onclick="openReviewPanel()">مراجعة البيانات واعتمادها ➡️</button>
+                                <button type="button" class="btn btn-secondary btn-reset-form">حذف المسودة والبدء مجدداً</button>
+                                <button type="button" class="btn btn-primary btn-open-review-panel">مراجعة البيانات واعتمادها ➡️</button>
                             </div>
                         </div>
                     </div>
@@ -802,68 +802,110 @@
                 <!-- ==================== صفحة لوحة الإدارة ==================== -->
                 <section id="admin-page" class="app-page">
                     
-                    <!-- إعدادات الاتصال بـ Supabase -->
-                    <div class="card" style="border-color: var(--accent-color); background-color: #f0f9ff; margin-bottom: 24px;">
-                        <h4 style="color: var(--primary-color); font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                            <span>⚙️</span> إعدادات الربط السحابي مع Supabase
-                        </h4>
-                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
-                            لربط المنصة سحابياً مع Supabase وحفظ البيانات في قاعدة بيانات حقيقية بدلاً من ذاكرة المتصفح المحلية، يرجى إدخال بيانات مشروعك هنا:
+                    <!-- بطاقة تسجيل دخول المراجعين المعرفيين (C-02 Admin Auth) -->
+                    <div id="admin-login-card" class="card" style="max-width: 480px; margin: 40px auto; padding: 28px; text-align: center; border-top: 4px solid var(--accent-color);">
+                        <div style="font-size: 40px; margin-bottom: 12px;">🔒</div>
+                        <h3 style="color: var(--primary-color); font-weight: 700; margin-bottom: 8px; font-size: 20px;">تسجيل دخول المراجعين المعتمـدين</h3>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6;">
+                            لوحة إدارة الطلبات محمية. يرجى تسجيل الدخول بالحساب المعتمد للاستعراض والتصدير.
                         </p>
-                        <div class="form-grid" style="gap: 16px; margin-bottom: 16px;">
-                            <div class="form-group">
-                                <label for="settings_sb_url" style="font-size: 13px;">رابط مشروع Supabase (Supabase URL):</label>
-                                <input type="text" id="settings_sb_url" placeholder="https://xxxxxxxx.supabase.co" style="padding: 8px 12px; font-size: 13px;">
-                            </div>
-                            <div class="form-group">
-                                <label for="settings_sb_key" style="font-size: 13px;">المفتاح العام (Anon Key):</label>
-                                <input type="text" id="settings_sb_key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." style="padding: 8px 12px; font-size: 13px;">
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 12px;">
-                            <button class="btn btn-primary" onclick="testAndSaveSupabaseConnection()" style="padding: 8px 16px; font-size: 13px;">💾 حفظ واختبار الاتصال السحابي</button>
-                            <button class="btn btn-danger" onclick="disconnectSupabase()" style="padding: 8px 16px; font-size: 13px;">🔌 قطع الاتصال (العودة للمحلي)</button>
-                        </div>
-                    </div>
-
-                    <div class="admin-toolbar">
-                        <div class="search-box">
-                            <input type="text" id="admin_search" placeholder="ابحث بالرقم المرجعي أو النصوص المدخلة...">
-                        </div>
                         
-                        <div class="filter-box">
-                            <label for="admin_filter_form" style="font-size: 13px;">تصفية حسب النموذج:</label>
-                            <select id="admin_filter_form" style="width: auto; padding: 8px 16px;">
-                                <option value="all">كل النماذج</option>
-                                <option value="form1">نموذج 1: حصر العمليات</option>
-                                <option value="form2">نموذج 2: توثيق المعرفة</option>
-                                <option value="form3">نموذج 3: بطاقة الجودة</option>
-                                <option value="form4">نموذج 4: الدروس المستفادة</option>
-                                <option value="form5">نموذج 5: خطة المشروع</option>
-                            </select>
+                        <form id="admin_login_form">
+                            <div class="form-group" style="margin-bottom: 16px; text-align: right;">
+                                <label for="admin_login_email" style="font-size: 13px; font-weight: 600;">البريد الإلكتروني للمراجع <span class="required-mark">*</span></label>
+                                <input type="email" id="admin_login_email" required placeholder="reviewer@domain.com" style="padding: 10px 14px; font-size: 14px;">
+                            </div>
                             
-                            <button class="btn btn-success" onclick="exportSubmissionsToExcel()">
-                                <span>📥</span> تصدير إلى Excel
+                            <div class="form-group" style="margin-bottom: 20px; text-align: right;">
+                                <label for="admin_login_password" style="font-size: 13px; font-weight: 600;">كلمة المرور <span class="required-mark">*</span></label>
+                                <input type="password" id="admin_login_password" required placeholder="••••••••" style="padding: 10px 14px; font-size: 14px;">
+                            </div>
+
+                            <div id="admin_login_error" style="display: none; background-color: #fee2e2; color: var(--danger); padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 16px; text-align: right; border-right: 3px solid var(--danger);">
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-weight: 700; font-size: 15px;">
+                                🔑 تسجيل الدخول للوحة الإدارة
                             </button>
-                        </div>
+                        </form>
                     </div>
 
-                    <!-- جدول عرض الطلبات المرسلة -->
-                    <div class="table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th style="width: 15%;">الرقم المرجعي</th>
-                                    <th style="width: 25%;">نوع النموذج</th>
-                                    <th style="width: 25%;">المحتوى الأساسي</th>
-                                    <th style="width: 20%;">تاريخ التقديم</th>
-                                    <th style="width: 15%;">العمليات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin_table_body">
-                                <!-- سيتم ملؤها ديناميكياً بجافا سكريبت -->
-                            </tbody>
-                        </table>
+                    <!-- منطقة العمل الرئيسية للوحة الإدارة (تظهر فقط بعد نجاح المصادقة) -->
+                    <div id="admin-workspace" style="display: none;">
+                        
+                        <!-- شريط معلومات المراجع وتسجيل الخروج -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background-color: #f8fafc; padding: 12px 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 16px;">👤</span>
+                                <span style="font-size: 13px; color: var(--text-muted);">المراجع المعتمد الحالي:</span>
+                                <span id="admin-user-email" style="font-size: 14px; font-weight: 700; color: var(--primary-color);"></span>
+                            </div>
+                            <button id="btn_admin_logout" class="btn btn-danger" style="padding: 6px 16px; font-size: 13px;">🚪 تسجيل الخروج</button>
+                        </div>
+
+                        <!-- إعدادات الاتصال بـ Supabase -->
+                        <div class="card" style="border-color: var(--accent-color); background-color: #f0f9ff; margin-bottom: 24px;">
+                            <h4 style="color: var(--primary-color); font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                                <span>⚙️</span> إعدادات الربط السحابي مع Supabase
+                            </h4>
+                            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+                                لربط المنصة سحابياً مع Supabase وحفظ البيانات في قاعدة بيانات حقيقية بدلاً من ذاكرة المتصفح المحلية، يرجى إدخال بيانات مشروعك هنا:
+                            </p>
+                            <div class="form-grid" style="gap: 16px; margin-bottom: 16px;">
+                                <div class="form-group">
+                                    <label for="settings_sb_url" style="font-size: 13px;">رابط مشروع Supabase (Supabase URL):</label>
+                                    <input type="text" id="settings_sb_url" placeholder="https://xxxxxxxx.supabase.co" style="padding: 8px 12px; font-size: 13px;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="settings_sb_key" style="font-size: 13px;">المفتاح العام (Anon Key):</label>
+                                    <input type="text" id="settings_sb_key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." style="padding: 8px 12px; font-size: 13px;">
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 12px;">
+                                <button class="btn btn-primary" id="btn_save_supabase_connection" style="padding: 8px 16px; font-size: 13px;">💾 حفظ واختبار الاتصال السحابي</button>
+                                <button class="btn btn-danger" id="btn_disconnect_supabase" style="padding: 8px 16px; font-size: 13px;">🔌 قطع الاتصال (العودة للمحلي)</button>
+                            </div>
+                        </div>
+
+                        <div class="admin-toolbar">
+                            <div class="search-box">
+                                <input type="text" id="admin_search" placeholder="ابحث بالرقم المرجعي أو النصوص المدخلة...">
+                            </div>
+                            
+                            <div class="filter-box">
+                                <label for="admin_filter_form" style="font-size: 13px;">تصفية حسب النموذج:</label>
+                                <select id="admin_filter_form" style="width: auto; padding: 8px 16px;">
+                                    <option value="all">كل النماذج</option>
+                                    <option value="form1">نموذج 1: حصر العمليات</option>
+                                    <option value="form2">نموذج 2: توثيق المعرفة</option>
+                                    <option value="form3">نموذج 3: بطاقة الجودة</option>
+                                    <option value="form4">نموذج 4: الدروس المستفادة</option>
+                                    <option value="form5">نموذج 5: خطة المشروع</option>
+                                </select>
+                                
+                                <button class="btn btn-success" id="btn_export_excel">
+                                    <span>📥</span> تصدير إلى Excel
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- جدول عرض الطلبات المرسلة -->
+                        <div class="table-container">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 15%;">الرقم المرجعي</th>
+                                        <th style="width: 25%;">نوع النموذج</th>
+                                        <th style="width: 25%;">المحتوى الأساسي</th>
+                                        <th style="width: 20%;">تاريخ التقديم</th>
+                                        <th style="width: 15%;">العمليات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin_table_body">
+                                    <!-- سيتم ملؤها ديناميكياً بجافا سكريبت -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </section>
 
@@ -991,7 +1033,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3>لوحة المراجعة النهائية للبيانات</h3>
-                <button type="button" class="close-modal" onclick="closeReviewModal()">&times;</button>
+                <button type="button" class="close-modal btn-close-review-modal">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="review-panel">
@@ -1003,8 +1045,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeReviewModal()">إغلاق وتعديل البيانات</button>
-                <button type="button" class="btn btn-success" onclick="submitActiveForm()">تأكيد وإرسال النموذج النهائي ✔️</button>
+                <button type="button" class="btn btn-secondary btn-close-review-modal">إغلاق وتعديل البيانات</button>
+                <button type="button" class="btn btn-success" id="btn_submit_active_form">تأكيد وإرسال النموذج النهائي ✔️</button>
             </div>
         </div>
     </div>
@@ -1014,7 +1056,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 id="details_modal_title">تفاصيل الطلب</h3>
-                <button type="button" class="close-modal" onclick="closeDetailsModal()">&times;</button>
+                <button type="button" class="close-modal btn-close-details-modal">&times;</button>
             </div>
             <div class="modal-body" id="details_modal_body">
                 <!-- سيتم ملؤها ديناميكياً عبر JS -->

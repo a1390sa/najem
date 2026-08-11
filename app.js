@@ -1,3 +1,14 @@
+
+// 0. دالة الحماية والهروب من نصوص HTML لمنع ثغرات XSS
+function escapeHTML(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
 /**
  * منصة إدارة المعرفة التفاعلية - ملف المنطق البرمجي الرئيسي (app.js)
  * إدارة الحالات، الحفظ التلقائي، التحقق الذكي، التصدير، ولوحة التحكم
@@ -136,13 +147,15 @@ async function initApp() {
     setupFormListeners();
     setupRatingListeners();
     setupStepsManager();
+    setupDOMEventListeners();
     loadActiveFormDraft();
     updateProgress(currentActiveForm);
     
     // محاولة ربط قاعدة بيانات Supabase
     tryConnectSupabase();
     
-    await renderAdminSubmissions();
+    // فحص مصادقة المراجعين واستعراض البيانات
+    await checkAdminSession();
     setupAdminControls();
 }
 
@@ -1109,14 +1122,14 @@ async function renderAdminSubmissions() {
         });
         
         tr.innerHTML = `
-            <td><strong>${sub.id}</strong></td>
-            <td><span class="form-badge">${FORM_NAMES[sub.form_type]}</span></td>
+            <td><strong>${escapeHTML(sub.id)}</strong></td>
+            <td><span class="form-badge">${escapeHTML(FORM_NAMES[sub.form_type] || sub.form_type)}</span></td>
             <td><span class="badge-status submitted">مدخل سحابياً</span></td>
-            <td>${formattedDate}</td>
+            <td>${escapeHTML(formattedDate)}</td>
             <td>
-                <button class="btn btn-secondary btn-sm" onclick="viewSubmissionDetails('${sub.id}', '${sub.form_type}')">عرض</button>
-                <button class="btn btn-primary btn-sm" onclick="printSubmissionDirectly('${sub.id}', '${sub.form_type}')">طباعة PDF</button>
-                <button class="btn btn-danger btn-sm" onclick="deleteSubmission('${sub.id}')">حذف</button>
+                <button class="btn btn-secondary btn-sm btn-view-sub" data-id="${escapeHTML(sub.id)}" data-type="${escapeHTML(sub.form_type)}">عرض</button>
+                <button class="btn btn-primary btn-sm btn-print-sub" data-id="${escapeHTML(sub.id)}" data-type="${escapeHTML(sub.form_type)}">طباعة PDF</button>
+                <button class="btn btn-danger btn-sm btn-delete-sub" data-id="${escapeHTML(sub.id)}">حذف</button>
             </td>
         `;
         tbody.appendChild(tr);
@@ -1346,9 +1359,10 @@ async function viewSubmissionDetails(submissionId, formType) {
     const modalFooter = document.getElementById('details_modal_footer');
     if (modalFooter) {
         modalFooter.innerHTML = `
-            <button class="btn btn-primary" onclick="printSubmissionDirectly('${submissionId}', '${formType}')">طباعة وتصدير PDF</button>
-            <button class="btn btn-secondary" onclick="closeDetailsModal()">إغلاق</button>
+            <button class="btn btn-primary" id="btn_print_detail_modal">طباعة وتصدير PDF</button>
+            <button class="btn btn-secondary btn-close-details-modal">إغلاق</button>
         `;
+        document.getElementById("btn_print_detail_modal")?.addEventListener("click", () => printSubmissionDirectly(submissionId, formType));
     }
     
     document.getElementById('details-modal').classList.add('active');
@@ -1632,4 +1646,201 @@ function showToast(message, type = 'info') {
     setTimeout(() => {
         toast.classList.remove('show');
     }, 4000);
+}
+
+
+// =========================================================================
+// مصادقة المراجعين وإدارة الجلسات السحابية (C-02 Admin Authentication)
+// =========================================================================
+
+async function checkAdminSession() {
+    const loginCard = document.getElementById('admin-login-card');
+    const adminWorkspace = document.getElementById('admin-workspace');
+    const userEmailSpan = document.getElementById('admin-user-email');
+
+    if (!supabaseClient) {
+        if (loginCard) loginCard.style.display = 'block';
+        if (adminWorkspace) adminWorkspace.style.display = 'none';
+        return;
+    }
+
+    try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (session && session.user) {
+            if (loginCard) loginCard.style.display = 'none';
+            if (adminWorkspace) adminWorkspace.style.display = 'block';
+            if (userEmailSpan) userEmailSpan.textContent = session.user.email;
+            await renderAdminSubmissions();
+        } else {
+            if (loginCard) loginCard.style.display = 'block';
+            if (adminWorkspace) adminWorkspace.style.display = 'none';
+            if (userEmailSpan) userEmailSpan.textContent = '';
+        }
+    } catch (e) {
+        console.error("Auth session check error:", e);
+        if (loginCard) loginCard.style.display = 'block';
+        if (adminWorkspace) adminWorkspace.style.display = 'none';
+    }
+}
+
+async function handleAdminLogin() {
+    const emailInput = document.getElementById('admin_login_email');
+    const passwordInput = document.getElementById('admin_login_password');
+    const errorBox = document.getElementById('admin_login_error');
+
+    if (!emailInput || !passwordInput) return;
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!email || !password) {
+        if (errorBox) {
+            errorBox.textContent = 'يرجى إدخال البريد الإلكتروني وكلمة المرور';
+            errorBox.style.display = 'block';
+        }
+        return;
+    }
+
+    if (!supabaseClient) {
+        showToast("الخدمة السحابية غير متصلة، لا يمكن تسجيل الدخول", "danger");
+        return;
+    }
+
+    showToast("جاري التحقق من بيانات الدخول...", "info");
+    if (errorBox) errorBox.style.display = 'none';
+
+    try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+        if (error) {
+            if (errorBox) {
+                errorBox.textContent = 'فشل تسجيل الدخول: ' + (error.message || 'بيانات اعتماد غير صحيحة');
+                errorBox.style.display = 'block';
+            }
+            showToast("فشل تسجيل الدخول: " + error.message, "danger");
+            return;
+        }
+
+        showToast("تم تسجيل الدخول بنجاح كـ مراجع معتمد ✔️", "success");
+        emailInput.value = '';
+        passwordInput.value = '';
+        await checkAdminSession();
+    } catch (err) {
+        console.error("Login Exception:", err);
+        if (errorBox) {
+            errorBox.textContent = 'حدث خطأ في عملية الاتصال بالمصادقة';
+            errorBox.style.display = 'block';
+        }
+    }
+}
+
+async function handleAdminLogout() {
+    if (supabaseClient) {
+        await supabaseClient.auth.signOut();
+    }
+    showToast("تم تسجيل الخروج بنجاح", "info");
+    await checkAdminSession();
+}
+
+function setupDOMEventListeners() {
+    // 1. كروت لوحة القيادة
+    document.querySelectorAll('.dashboard-card[data-dash-form]').forEach(card => {
+        card.addEventListener('click', () => {
+            const formsNav = document.querySelector('[data-target="forms-page"]');
+            if (formsNav) formsNav.click();
+            const targetForm = card.getAttribute('data-dash-form');
+            const formBtn = document.querySelector('[data-form="' + targetForm + '"]');
+            if (formBtn) formBtn.click();
+        });
+    });
+
+    // 2. تبويبات النماذج الداخلية
+    document.querySelectorAll('.form-tab-btn[data-inner-tab-form]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const formId = btn.getAttribute('data-inner-tab-form');
+            const idx = parseInt(btn.getAttribute('data-inner-tab-index'), 10);
+            switchInnerTab(formId, idx);
+        });
+    });
+
+    // 3. أزرار إفراغ المسودات
+    document.querySelectorAll('.btn-reset-form').forEach(btn => {
+        btn.addEventListener('click', () => resetActiveForm());
+    });
+
+    // 4. أزرار فتح لوحة المراجعة
+    document.querySelectorAll('.btn-open-review-panel').forEach(btn => {
+        btn.addEventListener('click', () => openReviewPanel());
+    });
+
+    // 5. أزرار إغلاق المودالات
+    document.querySelectorAll('.btn-close-review-modal').forEach(btn => {
+        btn.addEventListener('click', () => closeReviewModal());
+    });
+
+    document.querySelectorAll('.btn-close-details-modal').forEach(btn => {
+        btn.addEventListener('click', () => closeDetailsModal());
+    });
+
+    // 6. زر إرسال النموذج النهائي
+    const submitBtn = document.getElementById('btn_submit_active_form');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', () => submitActiveForm());
+    }
+
+    // 7. أزرار إعدادات Supabase
+    const saveSbBtn = document.getElementById('btn_save_supabase_connection');
+    if (saveSbBtn) {
+        saveSbBtn.addEventListener('click', () => testAndSaveSupabaseConnection());
+    }
+
+    const disSbBtn = document.getElementById('btn_disconnect_supabase');
+    if (disSbBtn) {
+        disSbBtn.addEventListener('click', () => disconnectSupabase());
+    }
+
+    // 8. زر تصدير Excel
+    const exportBtn = document.getElementById('btn_export_excel');
+    if (exportBtn) {
+        exportBtn.addEventListener('click', () => exportSubmissionsToExcel());
+    }
+
+    // 9. نموذج تسجيل دخول المراجعين وتسجيل الخروج
+    const loginForm = document.getElementById('admin_login_form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            handleAdminLogin();
+        });
+    }
+
+    const logoutBtn = document.getElementById('btn_admin_logout');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => handleAdminLogout());
+    }
+
+    // 10. التفويض على الجدول (Event Delegation) لأزرار الجدول
+    const tbody = document.getElementById('admin_table_body');
+    if (tbody) {
+        tbody.addEventListener('click', (e) => {
+            const viewBtn = e.target.closest('.btn-view-sub');
+            if (viewBtn) {
+                viewSubmissionDetails(viewBtn.getAttribute('data-id'), viewBtn.getAttribute('data-type'));
+                return;
+            }
+            const printBtn = e.target.closest('.btn-print-sub');
+            if (printBtn) {
+                printSubmissionDirectly(printBtn.getAttribute('data-id'), printBtn.getAttribute('data-type'));
+                return;
+            }
+            const deleteBtn = e.target.closest('.btn-delete-sub');
+            if (deleteBtn) {
+                deleteSubmission(deleteBtn.getAttribute('data-id'));
+                return;
+            }
+        });
+    }
 }
