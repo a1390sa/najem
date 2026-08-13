@@ -872,7 +872,7 @@ function openReviewPanel() {
         notesItem.style.gridColumn = 'span 2';
         notesItem.innerHTML = `
             <div class="review-label">ملاحظات فريق الحصر</div>
-            <div class="review-value">${notes || '<span class="empty">لا توجد ملاحظات</span>'}</div>
+            <div class="review-value">${notes ? escapeHTML(notes) : '<span class="empty">لا توجد ملاحظات</span>'}</div>
         `;
         reviewGrid.appendChild(notesItem);
     }
@@ -1295,7 +1295,7 @@ async function viewSubmissionDetails(submissionId, formType) {
         item.className = 'review-field';
         item.innerHTML = `
             <div class="review-label">${labelText}</div>
-            <div class="review-value">${valueText || '<span class="empty">لا يوجد</span>'}</div>
+            <div class="review-value">${valueText ? escapeHTML(valueText) : '<span class="empty">لا يوجد</span>'}</div>
         `;
         reviewGrid.appendChild(item);
     });
@@ -1308,7 +1308,7 @@ async function viewSubmissionDetails(submissionId, formType) {
         let stepsHtml = "<ol style='padding-right: 20px; margin-top: 8px;'>";
         const stepsArr = detailData.f2_steps || [];
         stepsArr.forEach(st => {
-            if (st.trim() !== '') stepsHtml += `<li>${st}</li>`;
+            if (st.trim() !== '') stepsHtml += `<li>${escapeHTML(st)}</li>`;
         });
         stepsHtml += "</ol>";
         
@@ -1351,7 +1351,7 @@ async function viewSubmissionDetails(submissionId, formType) {
         notesItem.style.gridColumn = 'span 2';
         notesItem.innerHTML = `
             <div class="review-label">ملاحظات فريق الحصر</div>
-            <div class="review-value">${notesText || '<span class="empty">لا توجد ملاحظات</span>'}</div>
+            <div class="review-value">${notesText ? escapeHTML(notesText) : '<span class="empty">لا توجد ملاحظات</span>'}</div>
         `;
         reviewGrid.appendChild(notesItem);
     }
@@ -1588,7 +1588,7 @@ function generatePrintTableRows(formType, data) {
         let stepsHtml = "<ol style='padding-right: 20px;'>";
         const stepsArr = data.f2_steps || [];
         stepsArr.forEach(st => {
-            if (st.trim() !== '') stepsHtml += `<li>${st}</li>`;
+            if (st.trim() !== '') stepsHtml += `<li>${escapeHTML(st)}</li>`;
         });
         stepsHtml += "</ol>";
         rowsHtml += `
@@ -1607,7 +1607,7 @@ function generatePrintTableRows(formType, data) {
         rowsHtml += `
             <tr style="border-bottom: 1px solid #ccc;">
                 <td style="padding: 12px; font-weight: 700; background-color: #f9f9f9; border: 1px solid #ccc;">مجموع الدرجات (من 25)</td>
-                <td style="padding: 12px; border: 1px solid #ccc;">${totalScore}</td>
+                <td style="padding: 12px; border: 1px solid #ccc;">${totalScore ? escapeHTML(totalScore) : ''}</td>
             </tr>
             <tr style="border-bottom: 1px solid #ccc;">
                 <td style="padding: 12px; font-weight: 700; background-color: #f9f9f9; border: 1px solid #ccc;">قرار الاعتماد</td>
@@ -1615,7 +1615,7 @@ function generatePrintTableRows(formType, data) {
             </tr>
             <tr style="border-bottom: 1px solid #ccc;">
                 <td style="padding: 12px; font-weight: 700; background-color: #f9f9f9; border: 1px solid #ccc;">ملاحظات المقيم</td>
-                <td style="padding: 12px; border: 1px solid #ccc;">${notesText || 'لا توجد'}</td>
+                <td style="padding: 12px; border: 1px solid #ccc;">${notesText ? escapeHTML(notesText) : 'لا توجد'}</td>
             </tr>
         `;
     }
@@ -1625,7 +1625,7 @@ function generatePrintTableRows(formType, data) {
         rowsHtml += `
             <tr style="border-bottom: 1px solid #ccc;">
                 <td style="padding: 12px; font-weight: 700; background-color: #f9f9f9; border: 1px solid #ccc;">ملاحظات فريق الحصر</td>
-                <td style="padding: 12px; border: 1px solid #ccc;">${notesText || 'لا توجد'}</td>
+                <td style="padding: 12px; border: 1px solid #ccc;">${notesText ? escapeHTML(notesText) : 'لا توجد'}</td>
             </tr>
         `;
     }
