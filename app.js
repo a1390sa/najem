@@ -815,7 +815,7 @@ function openReviewPanel() {
         item.className = 'review-field';
         item.innerHTML = `
             <div class="review-label">${labelText}</div>
-            <div class="review-value">${valueText || '<span class="empty">لا يوجد</span>'}</div>
+            <div class="review-value">${valueText ? escapeHTML(valueText) : '<span class="empty">لا يوجد</span>'}</div>
         `;
         reviewGrid.appendChild(item);
     });
@@ -827,7 +827,7 @@ function openReviewPanel() {
         
         let stepsHtml = "<ol style='padding-right: 20px; margin-top: 8px;'>";
         form2StepsList.forEach(st => {
-            if (st.trim() !== '') stepsHtml += `<li>${st}</li>`;
+            if (st.trim() !== '') stepsHtml += `<li>${escapeHTML(st)}</li>`;
         });
         stepsHtml += "</ol>";
         
@@ -851,15 +851,15 @@ function openReviewPanel() {
         extraGrid.innerHTML = `
             <div class="review-field">
                 <div class="review-label">مجموع الدرجات (من 25)</div>
-                <div class="review-value">${total}</div>
+                <div class="review-value">${escapeHTML(total)}</div>
             </div>
             <div class="review-field">
                 <div class="review-label">قرار الاعتماد</div>
-                <div class="review-value">${decisionText}</div>
+                <div class="review-value">${escapeHTML(decisionText)}</div>
             </div>
             <div class="review-field" style="grid-column: span 2;">
                 <div class="review-label">ملاحظات المقيم</div>
-                <div class="review-value">${notes || '<span class="empty">لا توجد ملاحظات</span>'}</div>
+                <div class="review-value">${notes ? escapeHTML(notes) : '<span class="empty">لا توجد ملاحظات</span>'}</div>
             </div>
         `;
         reviewGrid.appendChild(extraGrid);
@@ -887,7 +887,9 @@ function closeReviewModal() {
 
 // 12. إرسال البيانات الفعلي وتخزينها في قاعدة البيانات (سحابياً بـ Supabase أو محلياً)
 async function submitActiveForm() {
-    const id = 'KM-' + Math.floor(100000 + Math.random() * 900000);
+    const randomArray = new Uint32Array(1);
+    window.crypto.getRandomValues(randomArray);
+    const id = 'KM-' + (100000 + (randomArray[0] % 900000));
     
     // إرسال البيانات سحابياً إذا كان العميل متصلاً
     if (supabaseClient) {
@@ -1328,7 +1330,7 @@ async function viewSubmissionDetails(submissionId, formType) {
         extraGrid.innerHTML = `
             <div class="review-field">
                 <div class="review-label">مجموع الدرجات (من 25)</div>
-                <div class="review-value">${totalScore}</div>
+                <div class="review-value">${escapeHTML(totalScore)}</div>
             </div>
             <div class="review-field">
                 <div class="review-label">قرار الاعتماد</div>
@@ -1336,7 +1338,7 @@ async function viewSubmissionDetails(submissionId, formType) {
             </div>
             <div class="review-field" style="grid-column: span 2;">
                 <div class="review-label">ملاحظات المقيم</div>
-                <div class="review-value">${notesText || '<span class="empty">لا توجد ملاحظات</span>'}</div>
+                <div class="review-value">${notesText ? escapeHTML(notesText) : '<span class="empty">لا توجد ملاحظات</span>'}</div>
             </div>
         `;
         reviewGrid.appendChild(extraGrid);
@@ -1460,7 +1462,7 @@ async function printSubmissionDirectly(submissionId, formType) {
             <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 5px;">منصة إدارة المعرفة التفاعلية</h2>
             <h3 style="font-size: 18px; font-weight: 700; color: #555;">${FORM_NAMES[formType]}</h3>
             <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 12px; color: #777;">
-                <span>الرقم المرجعي للطلب: ${submissionId}</span>
+                <span>الرقم المرجعي للطلب: ${escapeHTML(submissionId)}</span>
                 <span>تاريخ التقديم: ${new Date().toLocaleDateString('ar-EG')}</span>
             </div>
         </div>
@@ -1577,7 +1579,7 @@ function generatePrintTableRows(formType, data) {
         rowsHtml += `
             <tr style="border-bottom: 1px solid #ccc;">
                 <td style="padding: 12px; font-weight: 700; width: 30%; background-color: #f9f9f9; border: 1px solid #ccc;">${labelText}</td>
-                <td style="padding: 12px; border: 1px solid #ccc; white-space: pre-line;">${val || 'لا يوجد'}</td>
+                <td style="padding: 12px; border: 1px solid #ccc; white-space: pre-line;">${val ? escapeHTML(val) : 'لا يوجد'}</td>
             </tr>
         `;
     });

@@ -104,7 +104,32 @@ CREATE INDEX idx_submissions_status ON submissions(status);
 CREATE INDEX idx_submissions_created ON submissions(created_at);
 
 -- =========================================================================
--- تفعيل سياسات الأمان على مستوى الصفوف (Row Level Security - RLS) [التوصية C-01]
+-- جدول وحسابات المراجعين (Profiles Table & Helper Functions) [NJ-01]
+-- =========================================================================
+
+CREATE TABLE IF NOT EXISTS profiles (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    email VARCHAR(255),
+    is_reviewer BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- دالة أمنية للتحقق من صلاحيات المراجع is_reviewer
+CREATE OR REPLACE FUNCTION is_reviewer()
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM profiles
+    WHERE id = auth.uid() AND is_reviewer = true
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow reviewer read of own profile" ON profiles FOR SELECT TO authenticated USING (auth.uid() = id);
+
+-- =========================================================================
+-- تفعيل سياسات الأمان على مستوى الصفوف (Row Level Security - RLS) [NJ-01]
 -- =========================================================================
 
 -- 1. تفعيل RLS على كافة الجداول
@@ -117,32 +142,33 @@ ALTER TABLE form4_lessons_learned ENABLE ROW LEVEL SECURITY;
 ALTER TABLE form5_strategic_project_plan ENABLE ROW LEVEL SECURITY;
 
 -- 2. إنشـاء سياسـات الأمان المحددة والصريحة (Explicit Policies)
+-- السماح بالإدراج للجميع (anon + authenticated) وتخصيص القراءة للمراجعين المصادقين فقط (is_reviewer = true)
 
 -- جدول submissions
-CREATE POLICY "Allow public insert to submissions" ON submissions FOR INSERT TO anon WITH CHECK (true);
-CREATE POLICY "Allow public read of submissions" ON submissions FOR SELECT TO anon USING (true);
+CREATE POLICY "Allow public insert to submissions" ON submissions FOR INSERT TO anon, authenticated WITH CHECK (true);
+CREATE POLICY "Allow reviewer read of submissions" ON submissions FOR SELECT TO authenticated USING (is_reviewer());
 
 -- جدول form1_critical_processes
-CREATE POLICY "Allow public insert to form1" ON form1_critical_processes FOR INSERT TO anon WITH CHECK (true);
-CREATE POLICY "Allow public read of form1" ON form1_critical_processes FOR SELECT TO anon USING (true);
+CREATE POLICY "Allow public insert to form1" ON form1_critical_processes FOR INSERT TO anon, authenticated WITH CHECK (true);
+CREATE POLICY "Allow reviewer read of form1" ON form1_critical_processes FOR SELECT TO authenticated USING (is_reviewer());
 
 -- جدول form2_knowledge_documentation
-CREATE POLICY "Allow public insert to form2" ON form2_knowledge_documentation FOR INSERT TO anon WITH CHECK (true);
-CREATE POLICY "Allow public read of form2" ON form2_knowledge_documentation FOR SELECT TO anon USING (true);
+CREATE POLICY "Allow public insert to form2" ON form2_knowledge_documentation FOR INSERT TO anon, authenticated WITH CHECK (true);
+CREATE POLICY "Allow reviewer read of form2" ON form2_knowledge_documentation FOR SELECT TO authenticated USING (is_reviewer());
 
 -- جدول form2_steps
-CREATE POLICY "Allow public insert to form2_steps" ON form2_steps FOR INSERT TO anon WITH CHECK (true);
-CREATE POLICY "Allow public read of form2_steps" ON form2_steps FOR SELECT TO anon USING (true);
+CREATE POLICY "Allow public insert to form2_steps" ON form2_steps FOR INSERT TO anon, authenticated WITH CHECK (true);
+CREATE POLICY "Allow reviewer read of form2_steps" ON form2_steps FOR SELECT TO authenticated USING (is_reviewer());
 
 -- جدول form3_quality_assessment
-CREATE POLICY "Allow public insert to form3" ON form3_quality_assessment FOR INSERT TO anon WITH CHECK (true);
-CREATE POLICY "Allow public read of form3" ON form3_quality_assessment FOR SELECT TO anon USING (true);
+CREATE POLICY "Allow public insert to form3" ON form3_quality_assessment FOR INSERT TO anon, authenticated WITH CHECK (true);
+CREATE POLICY "Allow reviewer read of form3" ON form3_quality_assessment FOR SELECT TO authenticated USING (is_reviewer());
 
 -- جدول form4_lessons_learned
-CREATE POLICY "Allow public insert to form4" ON form4_lessons_learned FOR INSERT TO anon WITH CHECK (true);
-CREATE POLICY "Allow public read of form4" ON form4_lessons_learned FOR SELECT TO anon USING (true);
+CREATE POLICY "Allow public insert to form4" ON form4_lessons_learned FOR INSERT TO anon, authenticated WITH CHECK (true);
+CREATE POLICY "Allow reviewer read of form4" ON form4_lessons_learned FOR SELECT TO authenticated USING (is_reviewer());
 
 -- جدول form5_strategic_project_plan
-CREATE POLICY "Allow public insert to form5" ON form5_strategic_project_plan FOR INSERT TO anon WITH CHECK (true);
-CREATE POLICY "Allow public read of form5" ON form5_strategic_project_plan FOR SELECT TO anon USING (true);
+CREATE POLICY "Allow public insert to form5" ON form5_strategic_project_plan FOR INSERT TO anon, authenticated WITH CHECK (true);
+CREATE POLICY "Allow reviewer read of form5" ON form5_strategic_project_plan FOR SELECT TO authenticated USING (is_reviewer());
 
