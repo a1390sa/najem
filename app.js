@@ -885,11 +885,177 @@ function closeReviewModal() {
     document.getElementById('review-modal').classList.remove('active');
 }
 
+// =========================================================================
+// خريطة الترقيم المرجعي التسلسلي واستخراج البيانات الوصفية (KM-001 -> KM-500)
+// =========================================================================
+
+const LEGACY_ID_MAP = {
+    "KM-911001": "KM-001",
+    "KM-913002": "KM-002",
+    "KM-913003": "KM-003",
+    "KM-915004": "KM-004",
+    "KM-916005": "KM-005",
+    "KM-650806": "KM-006",
+    "KM-833543": "KM-007",
+    "KM-304769": "KM-008",
+    "KM-851246": "KM-009",
+    "KM-642727": "KM-010",
+    "KM-955880": "KM-011",
+    "KM-949397": "KM-012",
+    "KM-672846": "KM-013",
+    "KM-862573": "KM-014",
+    "KM-143233": "KM-015",
+    "KM-457087": "KM-016",
+    "KM-297383": "KM-017",
+    "KM-389269": "KM-018",
+    "KM-220879": "KM-019",
+    "KM-150172": "KM-020",
+    "KM-731970": "KM-021",
+    "KM-302178": "KM-022",
+    "KM-334233": "KM-023",
+    "KM-731091": "KM-024",
+    "KM-721241": "KM-025",
+    "KM-460921": "KM-026",
+    "KM-882719": "KM-027",
+    "KM-400808": "KM-028",
+    "KM-467071": "KM-029",
+    "KM-485152": "KM-030",
+    "KM-619495": "KM-031",
+    "KM-172598": "KM-032",
+    "KM-626905": "KM-033",
+    "KM-805185": "KM-034",
+    "KM-309223": "KM-035",
+    "KM-358296": "KM-036",
+    "KM-732309": "KM-037",
+    "KM-524145": "KM-038",
+    "KM-748988": "KM-039",
+    "KM-716963": "KM-040",
+    "KM-418588": "KM-041",
+    "KM-913006": "KM-042",
+    "KM-950001": "KM-043",
+    "KM-940001": "KM-044",
+    "KM-930001": "KM-045",
+    "KM-913007": "KM-046",
+    "KM-913008": "KM-047",
+    "KM-950002": "KM-048",
+    "KM-586360": "KM-049",
+    "KM-627415": "KM-050",
+    "KM-521350": "KM-051",
+    "KM-749673": "KM-052",
+    "KM-297575": "KM-053",
+    "KM-142067": "KM-054",
+    "KM-825244": "KM-055",
+    "KM-573094": "KM-056",
+    "KM-788983": "KM-057",
+    "KM-748164": "KM-058",
+    "KM-663893": "KM-059",
+    "KM-746366": "KM-060",
+    "KM-648598": "KM-061",
+    "KM-953025": "KM-062",
+    "KM-205174": "KM-063",
+    "KM-476361": "KM-064",
+    "KM-431736": "KM-065",
+    "KM-391959": "KM-066",
+    "KM-585235": "KM-067",
+    "KM-772602": "KM-068",
+    "KM-941520": "KM-069"
+};
+
+function getDisplayReferenceId(rawId) {
+    if (!rawId) return "KM-000";
+    if (LEGACY_ID_MAP[rawId]) return LEGACY_ID_MAP[rawId];
+    return rawId;
+}
+
+function extractSubmissionMeta(sub) {
+    let dept = 'غير محدد';
+    let title = 'بدون عنوان';
+    
+    // استخراج من استجابة Supabase العلائقية
+    if (sub.form1_critical_processes) {
+        dept = sub.form1_critical_processes.department_name || dept;
+        title = sub.form1_critical_processes.process_name || title;
+    } else if (sub.form2_knowledge_documentation) {
+        dept = sub.form2_knowledge_documentation.owning_department || dept;
+        title = sub.form2_knowledge_documentation.knowledge_title || title;
+    } else if (sub.form3_quality_assessment) {
+        dept = sub.form3_quality_assessment.assessor_name ? `المقيم: ${sub.form3_quality_assessment.assessor_name}` : 'فريق الجودة والتقييم';
+        title = sub.form3_quality_assessment.asset_name || title;
+    } else if (sub.form4_lessons_learned) {
+        dept = sub.form4_lessons_learned.team_leader ? `قائد الفريق: ${sub.form4_lessons_learned.team_leader}` : 'إدارة المشاريع';
+        title = sub.form4_lessons_learned.project_name || title;
+    } else if (sub.form5_strategic_project_plan) {
+        dept = sub.form5_strategic_project_plan.project_manager ? `مدير المشروع: ${sub.form5_strategic_project_plan.project_manager}` : 'مكتب إدارة المشاريع';
+        title = sub.form5_strategic_project_plan.project_name || title;
+    }
+    
+    // استخراج من كائن التخزين المحلي (LocalStorage)
+    if (sub.data) {
+        if (sub.form_type === 'form1') {
+            dept = sub.data.f1_dept || dept;
+            title = sub.data.f1_process || title;
+        } else if (sub.form_type === 'form2') {
+            dept = sub.data.f2_dept || dept;
+            title = sub.data.f2_title || title;
+        } else if (sub.form_type === 'form3') {
+            dept = sub.data.f3_assessor ? `المقيم: ${sub.data.f3_assessor}` : 'فريق الجودة والتقييم';
+            title = sub.data.f3_asset || title;
+        } else if (sub.form_type === 'form4') {
+            dept = sub.data.f4_leader ? `قائد الفريق: ${sub.data.f4_leader}` : 'إدارة المشاريع';
+            title = sub.data.f4_name || title;
+        } else if (sub.form_type === 'form5') {
+            dept = sub.data.f5_manager ? `مدير المشروع: ${sub.data.f5_manager}` : 'مكتب إدارة المشاريع';
+            title = sub.data.f5_name || title;
+        }
+    }
+    
+    return { dept, title };
+}
+
+async function generateNextReferenceId() {
+    try {
+        if (supabaseClient) {
+            const { data, error } = await supabaseClient
+                .from('submissions')
+                .select('id');
+            if (!error && data) {
+                let maxNum = 0;
+                data.forEach(item => {
+                    const disp = getDisplayReferenceId(item.id);
+                    const match = disp.match(/^KM-(\d+)$/i);
+                    if (match) {
+                        const n = parseInt(match[1], 10);
+                        if (n > maxNum && n < 10000) {
+                            maxNum = n;
+                        }
+                    }
+                });
+                const totalOperational = data.filter(r => r.id !== 'SECVERIFY-DELETEME-001').length;
+                const nextSeq = Math.max(maxNum + 1, totalOperational + 1, 70);
+                return `KM-${String(nextSeq).padStart(3, '0')}`;
+            }
+        }
+    } catch (e) {
+        console.warn("Could not calculate remote next sequential ID:", e);
+    }
+    
+    const local = getLocalSubmissions();
+    let maxNum = 0;
+    local.forEach(item => {
+        const disp = getDisplayReferenceId(item.id);
+        const match = (disp || '').match(/^KM-(\d+)$/i);
+        if (match) {
+            const n = parseInt(match[1], 10);
+            if (n > maxNum && n < 10000) maxNum = n;
+        }
+    });
+    const nextSeq = Math.max(maxNum + 1, (local.length || 0) + 1, 70);
+    return `KM-${String(nextSeq).padStart(3, '0')}`;
+}
+
 // 12. إرسال البيانات الفعلي وتخزينها في قاعدة البيانات (سحابياً بـ Supabase أو محلياً)
 async function submitActiveForm() {
-    const randomArray = new Uint32Array(1);
-    window.crypto.getRandomValues(randomArray);
-    const id = 'KM-' + (100000 + (randomArray[0] % 900000));
+    const id = await generateNextReferenceId();
     
     // إرسال البيانات سحابياً إذا كان العميل متصلاً
     if (supabaseClient) {
@@ -1065,29 +1231,39 @@ async function submitActiveForm() {
     await renderAdminSubmissions();
 }
 
-// 13. لوحة الإدارة: عرض الطلبات سحابياً أو محلياً مع البحث والتصفية
+// 13. لوحة الإدارة: عرض الطلبات سحابياً أو محلياً مع الإحصائيات الشاملة والبحث والتصفية
 async function renderAdminSubmissions() {
-    const searchQuery = document.getElementById('admin_search')?.value.toLowerCase() || "";
+    const searchQuery = document.getElementById('admin_search')?.value.trim().toLowerCase() || "";
     const filterFormType = document.getElementById('admin_filter_form')?.value || "all";
     const tbody = document.getElementById('admin_table_body');
     if (!tbody) return;
     
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">جاري تحميل البيانات...</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">جاري تحميل ومعالجة البيانات المعرفية...</td></tr>`;
     
     let submissions = [];
     
     if (supabaseClient) {
         try {
-            // جلب البيانات من جدول submissions الأساسي مع تفاصيل الجداول الجانبية
+            // جلب البيانات مع التفاصيل العلائقية من الجداول الفرعية (الإدارة، العنوان، المحتوى)
             const { data, error } = await supabaseClient
                 .from('submissions')
-                .select('*')
+                .select(`
+                    id,
+                    form_type,
+                    status,
+                    created_at,
+                    form1_critical_processes(department_name, process_name),
+                    form2_knowledge_documentation(owning_department, knowledge_title),
+                    form3_quality_assessment(asset_name, assessor_name),
+                    form4_lessons_learned(project_name, team_leader),
+                    form5_strategic_project_plan(project_name, project_manager)
+                `)
                 .order('created_at', { ascending: false });
                 
             if (error) throw error;
-            submissions = data || [];
+            submissions = (data || []).filter(s => s.id !== 'SECVERIFY-DELETEME-001');
         } catch (err) {
-            console.error("Supabase load error:", err);
+            console.error("Supabase relational load error:", err);
             showToast("حدث خطأ أثناء جلب البيانات من السحابة، تم التحويل للعرض المحلي", "warning");
             submissions = getLocalSubmissions();
         }
@@ -1095,23 +1271,37 @@ async function renderAdminSubmissions() {
         submissions = getLocalSubmissions();
     }
 
+    // تحديث لوحة الإحصائيات والمؤشرات التنفيذية (نحو مستهدف 500 معرفة)
+    updateAdminStatistics(submissions);
+
     if (submissions.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">لا توجد طلبات مدخلة حالياً</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">لا توجد طلبات مدخلة حالياً في النظام</td></tr>`;
         return;
     }
     
-    // تصفية البيانات في جهة العميل
+    // تصفية البيانات في جهة العميل (بنوع النموذج والبحث في الرقم المرجعي، الإدارة، واسم العملية)
     let filtered = submissions.filter(sub => {
         if (filterFormType !== 'all' && sub.form_type !== filterFormType) return false;
         
         if (searchQuery) {
-            return sub.id.toLowerCase().includes(searchQuery) || sub.form_type.toLowerCase().includes(searchQuery);
+            const meta = extractSubmissionMeta(sub);
+            const rawId = (sub.id || '').toLowerCase();
+            const dispId = getDisplayReferenceId(sub.id).toLowerCase();
+            const formTitle = (FORM_NAMES[sub.form_type] || '').toLowerCase();
+            const dept = (meta.dept || '').toLowerCase();
+            const title = (meta.title || '').toLowerCase();
+            
+            return rawId.includes(searchQuery) || 
+                   dispId.includes(searchQuery) || 
+                   formTitle.includes(searchQuery) || 
+                   dept.includes(searchQuery) || 
+                   title.includes(searchQuery);
         }
         return true;
     });
 
     if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">لا توجد طلبات مطابقة للبحث والتصفية</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">لا توجد طلبات مطابقة للبحث والتصفية المختارة</td></tr>`;
         return;
     }
 
@@ -1120,22 +1310,81 @@ async function renderAdminSubmissions() {
         const tr = document.createElement('tr');
         const dateVal = sub.created_at || sub.submitted_at;
         const formattedDate = new Date(dateVal).toLocaleDateString('ar-EG', {
-            year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
+            year: 'numeric', month: 'short', day: 'numeric'
         });
+        const meta = extractSubmissionMeta(sub);
+        const displayId = getDisplayReferenceId(sub.id);
         
         tr.innerHTML = `
-            <td><strong>${escapeHTML(sub.id)}</strong></td>
-            <td><span class="form-badge">${escapeHTML(FORM_NAMES[sub.form_type] || sub.form_type)}</span></td>
-            <td><span class="badge-status submitted">مدخل سحابياً</span></td>
-            <td>${escapeHTML(formattedDate)}</td>
             <td>
-                <button class="btn btn-secondary btn-sm btn-view-sub" data-id="${escapeHTML(sub.id)}" data-type="${escapeHTML(sub.form_type)}">عرض</button>
-                <button class="btn btn-primary btn-sm btn-print-sub" data-id="${escapeHTML(sub.id)}" data-type="${escapeHTML(sub.form_type)}">طباعة PDF</button>
-                <button class="btn btn-danger btn-sm btn-delete-sub" data-id="${escapeHTML(sub.id)}">حذف</button>
+                <strong style="color: var(--primary-color); font-size: 13px;">${escapeHTML(displayId)}</strong>
+                ${displayId !== sub.id ? `<br><small style="color: var(--text-muted); font-size: 10px;">(${escapeHTML(sub.id)})</small>` : ''}
+            </td>
+            <td><span class="form-badge">${escapeHTML(FORM_NAMES[sub.form_type] || sub.form_type)}</span></td>
+            <td><span class="dept-badge">${escapeHTML(meta.dept)}</span></td>
+            <td><strong>${escapeHTML(meta.title)}</strong></td>
+            <td style="font-size: 12px; color: var(--text-muted);">${escapeHTML(formattedDate)}</td>
+            <td>
+                <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                    <button class="btn btn-secondary btn-sm btn-view-sub" data-id="${escapeHTML(sub.id)}" data-type="${escapeHTML(sub.form_type)}">عرض</button>
+                    <button class="btn btn-primary btn-sm btn-print-sub" data-id="${escapeHTML(sub.id)}" data-type="${escapeHTML(sub.form_type)}">طباعة PDF</button>
+                    <button class="btn btn-danger btn-sm btn-delete-sub" data-id="${escapeHTML(sub.id)}">حذف</button>
+                </div>
             </td>
         `;
         tbody.appendChild(tr);
     });
+}
+
+// دالة حساب وتحديث بطاقات الإحصائيات التنفيذية
+function updateAdminStatistics(submissions) {
+    const totalCount = submissions.length;
+    const targetGoal = 500;
+    const percent = Math.min(100, (totalCount / targetGoal) * 100);
+    const remaining = Math.max(0, targetGoal - totalCount);
+
+    const counts = { form1: 0, form2: 0, form3: 0, form4: 0, form5: 0 };
+    const distinctDepts = new Set();
+
+    submissions.forEach(sub => {
+        if (counts[sub.form_type] !== undefined) {
+            counts[sub.form_type]++;
+        }
+        const meta = extractSubmissionMeta(sub);
+        if (meta.dept && meta.dept !== 'غير محدد') {
+            distinctDepts.add(meta.dept.trim());
+        }
+    });
+
+    const elTotal = document.getElementById('stats_total_count');
+    if (elTotal) elTotal.textContent = totalCount;
+
+    const elBar = document.getElementById('stats_target_progressbar');
+    if (elBar) elBar.style.width = percent.toFixed(1) + '%';
+
+    const elPercent = document.getElementById('stats_target_percent');
+    if (elPercent) elPercent.textContent = percent.toFixed(1) + '%';
+
+    const elRemaining = document.getElementById('stats_remaining_target');
+    if (elRemaining) elRemaining.textContent = remaining;
+
+    const elDepts = document.getElementById('stats_active_depts_count');
+    if (elDepts) elDepts.textContent = distinctDepts.size;
+
+    const elF1 = document.getElementById('stats_count_form1');
+    if (elF1) elF1.textContent = counts.form1;
+
+    const elF2 = document.getElementById('stats_count_form2');
+    if (elF2) elF2.textContent = counts.form2;
+
+    const elF3 = document.getElementById('stats_count_form3');
+    if (elF3) elF3.textContent = counts.form3;
+
+    const elF4 = document.getElementById('stats_count_form4');
+    if (elF4) elF4.textContent = counts.form4;
+
+    const elF5 = document.getElementById('stats_count_form5');
+    if (elF5) elF5.textContent = counts.form5;
 }
 
 function getLocalSubmissions() {
@@ -1203,7 +1452,8 @@ async function viewSubmissionDetails(submissionId, formType) {
     if (!container) return;
     
     container.innerHTML = "";
-    document.getElementById('details_modal_title').textContent = `تفاصيل الطلب: ${submissionId} - ${FORM_NAMES[formType]}`;
+    const displayRef = getDisplayReferenceId(submissionId);
+    document.getElementById('details_modal_title').textContent = `تفاصيل الطلب: ${displayRef} ${displayRef !== submissionId ? '(' + submissionId + ')' : ''} - ${FORM_NAMES[formType]}`;
     
     const reviewGrid = document.createElement('div');
     reviewGrid.className = 'review-grid';
@@ -1365,6 +1615,7 @@ async function viewSubmissionDetails(submissionId, formType) {
             <button class="btn btn-secondary btn-close-details-modal">إغلاق</button>
         `;
         document.getElementById("btn_print_detail_modal")?.addEventListener("click", () => printSubmissionDirectly(submissionId, formType));
+        modalFooter.querySelector('.btn-close-details-modal')?.addEventListener('click', () => closeDetailsModal());
     }
     
     document.getElementById('details-modal').classList.add('active');
@@ -1402,8 +1653,21 @@ async function exportSubmissionsToExcel() {
     let submissions = [];
     if (supabaseClient) {
         try {
-            const { data } = await supabaseClient.from('submissions').select('*');
-            submissions = data || [];
+            const { data } = await supabaseClient
+                .from('submissions')
+                .select(`
+                    id,
+                    form_type,
+                    status,
+                    created_at,
+                    form1_critical_processes(department_name, process_name),
+                    form2_knowledge_documentation(owning_department, knowledge_title),
+                    form3_quality_assessment(asset_name, assessor_name),
+                    form4_lessons_learned(project_name, team_leader),
+                    form5_strategic_project_plan(project_name, project_manager)
+                `)
+                .order('created_at', { ascending: false });
+            submissions = (data || []).filter(s => s.id !== 'SECVERIFY-DELETEME-001');
         } catch (e) {
             submissions = getLocalSubmissions();
         }
@@ -1417,14 +1681,23 @@ async function exportSubmissionsToExcel() {
     }
     
     let csvContent = "\uFEFF"; // إضافة BOM للغة العربية
-    csvContent += "الرقم المرجعي,نوع النموذج,تاريخ التقديم,الحالة السحابية\n";
+    csvContent += "الرقم المرجعي (التسلسلي),المعرف الأساسي,نوع النموذج,الإدارة / القسم,عنوان المعرفة أو العملية,تاريخ التقديم,الحالة\n";
     
     submissions.forEach(sub => {
+        const meta = extractSubmissionMeta(sub);
+        const displayId = getDisplayReferenceId(sub.id);
+        const dateStr = new Date(sub.created_at || sub.submitted_at).toLocaleDateString('ar-EG', {
+            year: 'numeric', month: '2-digit', day: '2-digit'
+        });
+
         const row = [
+            `"${displayId}"`,
             `"${sub.id}"`,
-            `"${FORM_NAMES[sub.form_type]}"`,
-            `"${new Date(sub.created_at || sub.submitted_at).toLocaleString('ar-EG')}"`,
-            `"${supabaseClient ? 'سحابي' : 'محلي'}"`
+            `"${FORM_NAMES[sub.form_type] || sub.form_type}"`,
+            `"${(meta.dept || '').replace(/"/g, '""')}"`,
+            `"${(meta.title || '').replace(/"/g, '""')}"`,
+            `"${dateStr}"`,
+            `"${supabaseClient ? 'معتمد سحابياً' : 'محلي'}"`
         ];
         csvContent += row.join(",") + "\n";
     });
@@ -1812,6 +2085,67 @@ function setupDOMEventListeners() {
 
     document.querySelectorAll('.btn-close-details-modal').forEach(btn => {
         btn.addEventListener('click', () => closeDetailsModal());
+    });
+
+    // تفويض نقر إغلاق نافذة التفاصيل عند النقر على الخلفية أو الزر
+    const detailsModal = document.getElementById('details-modal');
+    if (detailsModal) {
+        detailsModal.addEventListener('click', (e) => {
+            if (e.target.closest('.btn-close-details-modal') || e.target === detailsModal) {
+                closeDetailsModal();
+            }
+        });
+    }
+
+    // تفاعل نافذة النماذج الاسترشادية المكتملة
+    const exemplarModal = document.getElementById('exemplar-modal');
+    const openExemplarBtn = document.getElementById('btn_open_exemplar_modal');
+    if (openExemplarBtn && exemplarModal) {
+        openExemplarBtn.addEventListener('click', () => {
+            exemplarModal.classList.add('active');
+        });
+    }
+
+    if (exemplarModal) {
+        exemplarModal.addEventListener('click', (e) => {
+            if (e.target.closest('.btn-close-exemplar-modal') || e.target === exemplarModal) {
+                exemplarModal.classList.remove('active');
+            }
+        });
+    }
+
+    document.querySelectorAll('.btn-exemplar-tab').forEach(tabBtn => {
+        tabBtn.addEventListener('click', () => {
+            document.querySelectorAll('.btn-exemplar-tab').forEach(b => {
+                b.classList.remove('active', 'btn-primary');
+                b.classList.add('btn-secondary');
+            });
+            tabBtn.classList.add('active', 'btn-primary');
+            tabBtn.classList.remove('btn-secondary');
+
+            const targetId = tabBtn.getAttribute('data-target');
+            document.querySelectorAll('.exemplar-content-tab').forEach(content => {
+                if (content.id === targetId) {
+                    content.style.display = 'block';
+                    content.classList.add('active');
+                } else {
+                    content.style.display = 'none';
+                    content.classList.remove('active');
+                }
+            });
+        });
+    });
+
+    // التصفية السريعة بنقر بطاقات الإحصائيات في لوحة الإدارة
+    document.querySelectorAll('.stat-card.stat-clickable').forEach(card => {
+        card.addEventListener('click', async () => {
+            const formType = card.getAttribute('data-filter-form');
+            const filterSelect = document.getElementById('admin_filter_form');
+            if (filterSelect && formType) {
+                filterSelect.value = formType;
+                await renderAdminSubmissions();
+            }
+        });
     });
 
     // 6. زر إرسال النموذج النهائي

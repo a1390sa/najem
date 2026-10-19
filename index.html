@@ -152,12 +152,15 @@
                 <section id="forms-page" class="app-page">
                     
                     <!-- شريط تحديد النموذج للتعبئة -->
-                    <div class="form-selector-bar">
+                    <div class="form-selector-bar" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
                         <button class="selector-btn active" data-form="form1">النموذج 1: حصر العمليات</button>
                         <button class="selector-btn" data-form="form2">النموذج 2: توثيق المعرفة</button>
                         <button class="selector-btn" data-form="form3">النموذج 3: بطاقة الجودة</button>
                         <button class="selector-btn" data-form="form4">النموذج 4: الدروس المستفادة</button>
                         <button class="selector-btn" data-form="form5">النموذج 5: خطة توثيق المعرفة</button>
+                        <button type="button" class="btn btn-primary" id="btn_open_exemplar_modal" style="margin-right: auto; padding: 8px 16px; font-size: 13px; font-weight: 700; background: linear-gradient(135deg, #1e3a8a, #0d9488); border: none; border-radius: 8px; box-shadow: var(--shadow-sm); cursor: pointer;">
+                            💡 استعراض نماذج استرشادية مكتملة (صريحة / ضمنية)
+                        </button>
                     </div>
 
                     <!-- ==================== النموذج 1 ==================== -->
@@ -867,9 +870,102 @@
                             </div>
                         </div>
 
+                        <!-- لوحة المؤشرات والإحصائيات التنفيذية لنماذج المعرفة -->
+                        <div id="admin-stats-overview" class="admin-stats-container">
+                            <div class="stats-kpi-grid">
+                                <!-- كرت الهدف السنوي 500 معرفة -->
+                                <div class="stat-card kpi-target-card">
+                                    <div class="stat-card-header">
+                                        <span class="stat-card-title">مستهدف التوثيق السنوي</span>
+                                        <span class="stat-card-badge">الهدف: 500 معرفة</span>
+                                    </div>
+                                    <div class="stat-card-body">
+                                        <div class="stat-big-number"><span id="stats_total_count">0</span> <small>/ 500</small></div>
+                                        <div class="stat-progress-bar-wrap">
+                                            <div class="stat-progress-bar" id="stats_target_progressbar" style="width: 0%;"></div>
+                                        </div>
+                                        <div class="stat-card-sub">
+                                            <span>نسبة الإنجاز: <strong id="stats_target_percent" style="color: var(--success);">0%</strong></span>
+                                            <span>المتبقي للهدف: <strong id="stats_remaining_target">500</strong></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- كرت الإدارات المتفاعلة -->
+                                <div class="stat-card">
+                                    <div class="stat-card-header">
+                                        <span class="stat-card-title">الإدارات والأقسام المنجزة</span>
+                                        <span class="stat-card-icon">🏢</span>
+                                    </div>
+                                    <div class="stat-card-body">
+                                        <div class="stat-big-number" id="stats_active_depts_count">0</div>
+                                        <div class="stat-card-sub">
+                                            <span>إدارات وأقسام شاركت بالتوثيق</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- كروت تفصيلية حسب النماذج 1 إلى 5 -->
+                                <div class="stat-card stat-clickable" data-filter-form="form1" title="انقر لتصفية الجدول">
+                                    <div class="stat-card-header">
+                                        <span class="stat-card-title">العمليات الحرجة</span>
+                                        <span class="stat-mini-badge form1-badge">نموذج 1</span>
+                                    </div>
+                                    <div class="stat-card-body">
+                                        <div class="stat-big-number" id="stats_count_form1">0</div>
+                                        <div class="stat-card-sub">عملية حرجة محصورة</div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-card stat-clickable" data-filter-form="form2" title="انقر لتصفية الجدول">
+                                    <div class="stat-card-header">
+                                        <span class="stat-card-title">توثيق المعرفة والإجراءات</span>
+                                        <span class="stat-mini-badge form2-badge">نموذج 2</span>
+                                    </div>
+                                    <div class="stat-card-body">
+                                        <div class="stat-big-number" id="stats_count_form2">0</div>
+                                        <div class="stat-card-sub">إجراء موثق ومعتمد</div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-card stat-clickable" data-filter-form="form3" title="انقر لتصفية الجدول">
+                                    <div class="stat-card-header">
+                                        <span class="stat-card-title">بطاقات تقييم الجودة</span>
+                                        <span class="stat-mini-badge form3-badge">نموذج 3</span>
+                                    </div>
+                                    <div class="stat-card-body">
+                                        <div class="stat-big-number" id="stats_count_form3">0</div>
+                                        <div class="stat-card-sub">أصل معرفي مقيم</div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-card stat-clickable" data-filter-form="form4" title="انقر لتصفية الجدول">
+                                    <div class="stat-card-header">
+                                        <span class="stat-card-title">الدروس المستفادة</span>
+                                        <span class="stat-mini-badge form4-badge">نموذج 4</span>
+                                    </div>
+                                    <div class="stat-card-body">
+                                        <div class="stat-big-number" id="stats_count_form4">0</div>
+                                        <div class="stat-card-sub">درس وتجربة مستفادة</div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-card stat-clickable" data-filter-form="form5" title="انقر لتصفية الجدول">
+                                    <div class="stat-card-header">
+                                        <span class="stat-card-title">خطط المشاريع المعرفية</span>
+                                        <span class="stat-mini-badge form5-badge">نموذج 5</span>
+                                    </div>
+                                    <div class="stat-card-body">
+                                        <div class="stat-big-number" id="stats_count_form5">0</div>
+                                        <div class="stat-card-sub">خطة مشروع استراتيجي</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="admin-toolbar">
                             <div class="search-box">
-                                <input type="text" id="admin_search" placeholder="ابحث بالرقم المرجعي أو النصوص المدخلة...">
+                                <input type="text" id="admin_search" placeholder="ابحث بالرقم المرجعي أو الإدارة أو اسم العملية...">
                             </div>
                             
                             <div class="filter-box">
@@ -894,11 +990,12 @@
                             <table class="admin-table">
                                 <thead>
                                     <tr>
-                                        <th style="width: 15%;">الرقم المرجعي</th>
-                                        <th style="width: 25%;">نوع النموذج</th>
-                                        <th style="width: 25%;">المحتوى الأساسي</th>
-                                        <th style="width: 20%;">تاريخ التقديم</th>
-                                        <th style="width: 15%;">العمليات</th>
+                                        <th style="width: 12%;">الرقم المرجعي</th>
+                                        <th style="width: 18%;">نوع النموذج</th>
+                                        <th style="width: 20%;">الإدارة / القسم</th>
+                                        <th style="width: 26%;">عنوان المعرفة / العملية</th>
+                                        <th style="width: 12%;">تاريخ التقديم</th>
+                                        <th style="width: 12%;">العمليات</th>
                                     </tr>
                                 </thead>
                                 <tbody id="admin_table_body">
@@ -1063,6 +1160,174 @@
             </div>
             <div class="modal-footer" id="details_modal_footer">
                 <!-- الأزرار الديناميكية للطباعة والإغلاق -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== نافذة النماذج الاسترشادية المكتملة (Modal) ==================== -->
+    <div id="exemplar-modal" class="modal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #1e3a8a, #0d9488);">
+                <h3>💡 دليل النماذج الاسترشادية المكتملة (معرفة صريحة / معرفة ضمنية)</h3>
+                <button type="button" class="close-modal btn-close-exemplar-modal">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+                    نماذج معبأة بالكامل وفق أفضل الممارسات المهنية في إدارة المعرفة ومطابقة للواقع العملي لإدارات وأقسام المؤسسة (إدارة المنح، المساجد، الدعوة، القيم، سد الاحتياج، وتوسيع الأثر).
+                </p>
+
+                <!-- أزرار التبديل بين النماذج الاسترشادية -->
+                <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+                    <button type="button" class="btn btn-primary btn-exemplar-tab active" data-target="exemplar-explicit" style="flex: 1; padding: 10px; font-weight: 700;">
+                        📘 نموذج معرفة صريحة (إدارة المنح - سد الاحتياج)
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-exemplar-tab" data-target="exemplar-tacit" style="flex: 1; padding: 10px; font-weight: 700;">
+                        🧠 نموذج معرفة ضمنية (توسيع الأثر - الدعوة وتعزيز القيم)
+                    </button>
+                </div>
+
+                <!-- محتوى المعرفة الصريحة -->
+                <div id="exemplar-explicit" class="exemplar-content-tab active">
+                    <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 13px; color: #166534;">
+                        <strong>طبيعة المعرفة:</strong> صريحة (Explicit Knowledge) — مدونة في سياسات وأدلة، ذات معايير كمية ومصفوفات تنقيط وخطوات تسلسلية محددة وقابلة للتكرار والقياس.
+                    </div>
+                    
+                    <div class="review-grid">
+                        <div class="review-field">
+                            <div class="review-label">الإدارة / القسم</div>
+                            <div class="review-value">إدارة المنح / قسم سد الاحتياج</div>
+                        </div>
+                        <div class="review-field">
+                            <div class="review-label">الرقم المرجعي المعتمد</div>
+                            <div class="review-value">KM-EXP-001 (QMS-P-14)</div>
+                        </div>
+                        <div class="review-field" style="grid-column: span 2;">
+                            <div class="review-label">اسم العملية الحرجة</div>
+                            <div class="review-value">إجراء المفاضلة والتحكيم الفني لمشاريع سد الاحتياج المجتمعي المستعجل</div>
+                        </div>
+                        <div class="review-field" style="grid-column: span 2;">
+                            <div class="review-label">عنوان المعرفة / الإجراء التشغيلي</div>
+                            <div class="review-value">دليل معايير المفاضلة والفرز الميداني الموزون لمشاريع المنح وسد الاحتياج</div>
+                        </div>
+                        <div class="review-field">
+                            <div class="review-label">الخبير المعتمد</div>
+                            <div class="review-value">أ. فيصل المحمدي (رئيس قسم سد الاحتياج)</div>
+                        </div>
+                        <div class="review-field">
+                            <div class="review-label">مستوى المخاطرة / الأهمية</div>
+                            <div class="review-value" style="color: #b91c1c; font-weight: 700;">عالية جداً (تأثير مباشر على عدالة توزيع أموال المنح)</div>
+                        </div>
+                        <div class="review-field" style="grid-column: span 2;">
+                            <div class="review-label">الهدف من المعرفة</div>
+                            <div class="review-value">ضمان توجيه مخصصات المنح وسد الاحتياج للمشاريع الأكثر إلحاحاً وأثراً مجتمعياً، وفق مصفوفة تنقيط رقمية عادلة وموثقة تمنع الاجتهادات الفردية وتلبي متطلبات الحوكمة.</div>
+                        </div>
+                        <div class="review-field" style="grid-column: span 2;">
+                            <div class="review-label">نطاق التطبيق</div>
+                            <div class="review-value">كافة طلبات المنح وسد الاحتياج الواردة من الجمعيات الشريكة، والمشاريع الموسمية والطارئة المنفذة في نطاق عمل المؤسسة.</div>
+                        </div>
+                        <div class="review-field" style="grid-column: span 2;">
+                            <div class="review-label">المتطلبات المدخلة والأدوات المرتبطة</div>
+                            <div class="review-value">استمارة طلب المنحة، المسح الميداني لسد الاحتياج، مصفوفة المعايير الموزونة (Excel)، نظام المنح الإلكتروني، السجل الائتماني للجهة الشريكة.</div>
+                        </div>
+                        <div class="review-field" style="grid-column: span 2;">
+                            <div class="review-label">الخطوات الإجرائية التفصيلية (خطوة بخطوة)</div>
+                            <div class="review-value">
+                                <ol style="padding-right: 20px; line-height: 1.8; margin: 6px 0;">
+                                    <li><strong>الفحص الإداري الأولي:</strong> التحقق الآلي من ترخيص الجمعية واكتمال المستندات في نظام المنح خلال 48 ساعة.</li>
+                                    <li><strong>التحقق الميداني:</strong> مراجعة المسح الميداني المعتمد لنطاق الاحتياج ومطابقة التكلفة التقديرية بالأسعار المرجعية.</li>
+                                    <li><strong>تطبيق مصفوفة التنقيط الموزونة (100 درجة):</strong>
+                                        <ul>
+                                            <li>شدة الاحتياج وغياب الممول البديل (40 درجة)</li>
+                                            <li>كفاءة التكلفة وعائد الأثر لكل مستفيد (25 درجة)</li>
+                                            <li>كفاءة وخبرة الشريك المنفذ في الميدان (20 درجة)</li>
+                                            <li>سرعة وجاهزية التنفيذ (15 درجة)</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>العرض على لجنة المنح:</strong> تصعيد المشاريع الحاصلة على 75 درجة فأعلى مع التوصية بالاعتماد والصرف.</li>
+                                    <li><strong>الإشعار وتوقيع الاتفاقية:</strong> إرسال قرار الاعتماد الآلي وتوقيع اتفاقية الدعم المبرمجة مع الدفعات.</li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div class="review-field" style="grid-column: span 2;">
+                            <div class="review-label">نصائح الخبراء وتفادي الأخطاء الشائعة</div>
+                            <div class="review-value">
+                                ⚠️ <strong>خطأ شائع:</strong> الاكتفاء بالصور المرفقة من الجمعية دون مطابقة الإحداثيات الجغرافية عبر خرائط الأقمار الصناعية.<br>
+                                💡 <strong>نصيحة الخبير:</strong> تطبيق معيار "عائد المنحة المجتمعي" عبر قسمة عدد المستفيدين المباشرين على التكلفة الإجمالية لمقارنة المشاريع المتشابهة بدقة.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- محتوى المعرفة الضمنية -->
+                <div id="exemplar-tacit" class="exemplar-content-tab" style="display: none;">
+                    <div style="background: #f5f3ff; border: 1px solid #c4b5fd; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 13px; color: #5b21b6;">
+                        <strong>طبيعة المعرفة:</strong> ضمنية (Tacit Knowledge) — متجذرة في خبرات وحدس المتخصصين، تعتمد على فنون التواصل الإنساني، وقراءة شخصيات المانحين، والتفاوض الإقناعي لنقل الأفكار الدعوية والقيمية إلى واقع عملي.
+                    </div>
+
+                    <div class="review-grid">
+                        <div class="review-field">
+                            <div class="review-label">الإدارة / القسم</div>
+                            <div class="review-value">قسم تنمية القطاع وتوسيع الأثر / قسم الدعوة وتعزيز القيم</div>
+                        </div>
+                        <div class="review-field">
+                            <div class="review-label">الرقم المرجعي المعتمد</div>
+                            <div class="review-value">KM-TAC-001</div>
+                        </div>
+                        <div class="review-field" style="grid-column: span 2;">
+                            <div class="review-label">اسم العملية الحرجة</div>
+                            <div class="review-value">إقناع كبار المانحين والشركاء الاستراتيجيين بتبني ودعم المبادرات الدعوية والقيمية الكبرى</div>
+                        </div>
+                        <div class="review-field" style="grid-column: span 2;">
+                            <div class="review-label">عنوان المعرفة / الأصل المعرفي</div>
+                            <div class="review-value">منهجية وتكتيكات استخلاص الاحتياج القيمي وفنون العرض الإقناعي للمبادرات النوعية</div>
+                        </div>
+                        <div class="review-field">
+                            <div class="review-label">خبير ومصدر المعرفة</div>
+                            <div class="review-value">د. أحمد الزهراني (مستشار تنمية الموارد وتوسيع الأثر - 15 عاماً خبرة)</div>
+                        </div>
+                        <div class="review-field">
+                            <div class="review-label">مستوى الأهمية والخطورة</div>
+                            <div class="review-value" style="color: #b91c1c; font-weight: 700;">عالية جداً (فقدان المانح يؤدي لتعثر المبادرات المجتمعية الاستراتيجية)</div>
+                        </div>
+                        <div class="review-field" style="grid-column: span 2;">
+                            <div class="review-label">وصف المعرفة الضمنية ومكمن الخبرة</div>
+                            <div class="review-value">
+                                كيفية تحويل المبادرات الدعوية والقيمية المجردة (مثل غرس الصدق، تعزيز الأمانة، توقير المساجد) إلى مشاريع محددة المخرجات ذات قصص ملهمة تلامس اهتمامات المانح وتطلعاته الاستثمارية المجتمعية.
+                            </div>
+                        </div>
+                        <div class="review-field" style="grid-column: span 2;">
+                            <div class="review-label">تكتيكات الخبراء وأسرار الممارسة الناجحة (Tacit Rules of Thumb)</div>
+                            <div class="review-value">
+                                <ul style="padding-right: 20px; line-height: 1.8; margin: 6px 0;">
+                                    <li><strong>تحليل نفسية واهتمامات المانح مسبقاً:</strong> البحث في خلفية المانح (هل يفضل دعم البرامج العلمية الشرعية أم البرامج الشبابية المجتمعية؟).</li>
+                                    <li><strong>قاعدة "اللقاء الأول للمشاورة لا للمطالبة":</strong> ابدأ الاجتماع الأول بطلب رأي المانح وخبرته في تصميم المبادرة، مما يجعله شريكاً عاطفياً ومؤسساً في الفكرة قبل الحديث عن التكلفة.</li>
+                                    <li><strong>سرد قصة التغيير (Storytelling of Impact):</strong> التركيز على حالة واقعية لشاب أو أسرة تغيرت حياتهم إيجابياً بفضل البرنامج القيمي، وتجنب الإغراق في لغة الوعظ المجردة.</li>
+                                    <li><strong>صياغة خيارات الرعاية المرنة:</strong> عرض 3 مستويات للدعم (الماسي، الذهبي، الفضي) ليختار المانح ما يناسب ميزانيته دون شعور بالحرج أو الإلزام.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="review-field" style="grid-column: span 2;">
+                            <div class="review-label">الأخطاء الخفية القاتلة التي يقع فيها الممارس المبتدئ</div>
+                            <div class="review-value">
+                                🚫 <strong>الخطأ 1:</strong> البدء فوراً بطلب ميزانية الدعم المالي في أول 10 دقائق دون بناء الثقة والأثر.<br>
+                                🚫 <strong>الخطأ 2:</strong> استخدام مصطلحات إدارية أو إحصائية مفرطة التعقيد لا يفهمها المانح أو لا يرى رابطها بالواقع.<br>
+                                🚫 <strong>الخطأ 3:</strong> عدم توثيق وتزمين مخرجات الأثر، مما يجعل المانح يتخوف من هدر الموارد المالية.
+                            </div>
+                        </div>
+                        <div class="review-field" style="grid-column: span 2;">
+                            <div class="review-label">آلية نقل وتوريث هذه المعرفة الضمنية للفريق</div>
+                            <div class="review-value">
+                                1. عقد جلسات محاكاة دورية (Role Playing) داخل القسم للتدرب على سيناريوهات التفاوض الحقيقية.<br>
+                                2. إلزام الموظف الجديد بمرافقة الخبير (Shadowing) في 4 لقاءات تفاوضية ميدانية قبل قيادة الاجتماعات منفرداً.<br>
+                                3. تدوين "سجل الدروس المستفادة لكل لقاء مانح" فور انتهاء كل جلسة ميدانية.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-close-exemplar-modal">إغلاق الدليل الاسترشادي</button>
             </div>
         </div>
     </div>

@@ -800,6 +800,137 @@ textarea:focus {
     align-items: center;
 }
 
+/* تنسيقات إحصائيات لوحة الإدارة */
+.admin-stats-container {
+    margin-bottom: 24px;
+}
+
+.stats-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.stat-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.stat-card.stat-clickable {
+    cursor: pointer;
+}
+
+.stat-card.stat-clickable:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-color);
+}
+
+.stat-card.kpi-target-card {
+    grid-column: span 2;
+    background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+    border-color: #86efac;
+}
+
+@media (max-width: 992px) {
+    .stat-card.kpi-target-card {
+        grid-column: span 1;
+    }
+}
+
+.stat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.stat-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.stat-card-badge {
+    background-color: #dcfce7;
+    color: #15803d;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.stat-mini-badge {
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.stat-mini-badge.form1-badge { background-color: #e0f2fe; color: #0369a1; }
+.stat-mini-badge.form2-badge { background-color: #fef3c7; color: #b45309; }
+.stat-mini-badge.form3-badge { background-color: #f3e8ff; color: #7e22ce; }
+.stat-mini-badge.form4-badge { background-color: #fee2e2; color: #b91c1c; }
+.stat-mini-badge.form5-badge { background-color: #ccfbf1; color: #0f766e; }
+
+.stat-big-number {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--primary-color);
+    line-height: 1.2;
+}
+
+.stat-big-number small {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.stat-progress-bar-wrap {
+    width: 100%;
+    height: 8px;
+    background-color: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 8px 0;
+}
+
+.stat-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+    border-radius: 4px;
+    transition: width 0.5s ease-in-out;
+}
+
+.stat-card-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+}
+
+.dept-badge {
+    background-color: #f1f5f9;
+    color: var(--primary-color);
+    border: 1px solid #cbd5e1;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-block;
+    max-width: 100%;
+    white-space: normal;
+    word-break: break-word;
+}
+
 .table-container {
     width: 100%;
     overflow-x: auto;

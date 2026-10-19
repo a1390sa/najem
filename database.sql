@@ -12,7 +12,7 @@ CREATE TABLE submissions (
 
 -- النموذج 1: نموذج حصر المعرفة والعمليات الحرجة
 CREATE TABLE form1_critical_processes (
-    id VARCHAR(50) PRIMARY KEY REFERENCES submissions(id) ON DELETE CASCADE,
+    id VARCHAR(50) PRIMARY KEY REFERENCES submissions(id) ON DELETE CASCADE ON UPDATE CASCADE,
     department_name VARCHAR(150) NOT NULL, -- اسم الإدارة / القسم
     process_name VARCHAR(200) NOT NULL, -- اسم العملية الحرجة
     knowledge_type VARCHAR(50) CHECK (knowledge_type IN ('implicit', 'explicit')), -- نوع المعرفة (ضمنية/صريحة)
@@ -26,7 +26,7 @@ CREATE TABLE form1_critical_processes (
 
 -- النموذج 2: قالب توثيق المعرفة / الإجراءات التشغيلية
 CREATE TABLE form2_knowledge_documentation (
-    id VARCHAR(50) PRIMARY KEY REFERENCES submissions(id) ON DELETE CASCADE,
+    id VARCHAR(50) PRIMARY KEY REFERENCES submissions(id) ON DELETE CASCADE ON UPDATE CASCADE,
     knowledge_title VARCHAR(250) NOT NULL, -- عنوان المعرفة / الإجراء
     reference_code VARCHAR(100), -- الرقم المرجعي / الكود
     owning_department VARCHAR(150) NOT NULL, -- الإدارة المالكة
@@ -44,14 +44,14 @@ CREATE TABLE form2_knowledge_documentation (
 -- خطوات النموذج 2 (علاقة رأس بأطراف للخطوات الإجرائية)
 CREATE TABLE form2_steps (
     id SERIAL PRIMARY KEY,
-    form2_id VARCHAR(50) REFERENCES form2_knowledge_documentation(id) ON DELETE CASCADE,
+    form2_id VARCHAR(50) REFERENCES form2_knowledge_documentation(id) ON DELETE CASCADE ON UPDATE CASCADE,
     step_number INT NOT NULL,
     step_details TEXT NOT NULL
 );
 
 -- النموذج 3: بطاقة تقييم جودة المعرفة
 CREATE TABLE form3_quality_assessment (
-    id VARCHAR(50) PRIMARY KEY REFERENCES submissions(id) ON DELETE CASCADE,
+    id VARCHAR(50) PRIMARY KEY REFERENCES submissions(id) ON DELETE CASCADE ON UPDATE CASCADE,
     asset_name VARCHAR(250) NOT NULL, -- اسم الأصل المعرفي
     assessor_name VARCHAR(150) NOT NULL, -- اسم المقيم
     assessment_date DATE NOT NULL, -- تاريخ التقييم
@@ -67,7 +67,7 @@ CREATE TABLE form3_quality_assessment (
 
 -- النموذج 4: نموذج حصر الدروس المستفادة والتوصيات
 CREATE TABLE form4_lessons_learned (
-    id VARCHAR(50) PRIMARY KEY REFERENCES submissions(id) ON DELETE CASCADE,
+    id VARCHAR(50) PRIMARY KEY REFERENCES submissions(id) ON DELETE CASCADE ON UPDATE CASCADE,
     project_name VARCHAR(250) NOT NULL, -- اسم المشروع / العملية
     closure_date DATE, -- تاريخ الإغلاق
     team_leader VARCHAR(150), -- قائد الفريق / مدير المشروع
@@ -82,7 +82,7 @@ CREATE TABLE form4_lessons_learned (
 
 -- النموذج 5: خطة مشروع توثيق المعرفة الاستراتيجية
 CREATE TABLE form5_strategic_project_plan (
-    id VARCHAR(50) PRIMARY KEY REFERENCES submissions(id) ON DELETE CASCADE,
+    id VARCHAR(50) PRIMARY KEY REFERENCES submissions(id) ON DELETE CASCADE ON UPDATE CASCADE,
     project_name VARCHAR(250) NOT NULL, -- اسم المشروع المعرفي
     project_manager VARCHAR(150) NOT NULL, -- مدير المشروع
     expected_start_date DATE, -- تاريخ البدء المتوقع
@@ -142,33 +142,48 @@ ALTER TABLE form4_lessons_learned ENABLE ROW LEVEL SECURITY;
 ALTER TABLE form5_strategic_project_plan ENABLE ROW LEVEL SECURITY;
 
 -- 2. إنشـاء سياسـات الأمان المحددة والصريحة (Explicit Policies)
--- السماح بالإدراج للجميع (anon + authenticated) وتخصيص القراءة للمراجعين المصادقين فقط (is_reviewer = true)
+-- السماح بالإدراج للجميع (anon + authenticated) وتخصيص القراءة والتعديل والحذف للمراجعين المصادقين فقط (is_reviewer = true)
 
 -- جدول submissions
 CREATE POLICY "Allow public insert to submissions" ON submissions FOR INSERT TO anon, authenticated WITH CHECK (true);
 CREATE POLICY "Allow reviewer read of submissions" ON submissions FOR SELECT TO authenticated USING (is_reviewer());
+CREATE POLICY "Allow reviewer update of submissions" ON submissions FOR UPDATE TO authenticated USING (is_reviewer());
+CREATE POLICY "Allow reviewer delete of submissions" ON submissions FOR DELETE TO authenticated USING (is_reviewer());
 
 -- جدول form1_critical_processes
 CREATE POLICY "Allow public insert to form1" ON form1_critical_processes FOR INSERT TO anon, authenticated WITH CHECK (true);
 CREATE POLICY "Allow reviewer read of form1" ON form1_critical_processes FOR SELECT TO authenticated USING (is_reviewer());
+CREATE POLICY "Allow reviewer update of form1" ON form1_critical_processes FOR UPDATE TO authenticated USING (is_reviewer());
+CREATE POLICY "Allow reviewer delete of form1" ON form1_critical_processes FOR DELETE TO authenticated USING (is_reviewer());
 
 -- جدول form2_knowledge_documentation
 CREATE POLICY "Allow public insert to form2" ON form2_knowledge_documentation FOR INSERT TO anon, authenticated WITH CHECK (true);
 CREATE POLICY "Allow reviewer read of form2" ON form2_knowledge_documentation FOR SELECT TO authenticated USING (is_reviewer());
+CREATE POLICY "Allow reviewer update of form2" ON form2_knowledge_documentation FOR UPDATE TO authenticated USING (is_reviewer());
+CREATE POLICY "Allow reviewer delete of form2" ON form2_knowledge_documentation FOR DELETE TO authenticated USING (is_reviewer());
 
 -- جدول form2_steps
 CREATE POLICY "Allow public insert to form2_steps" ON form2_steps FOR INSERT TO anon, authenticated WITH CHECK (true);
 CREATE POLICY "Allow reviewer read of form2_steps" ON form2_steps FOR SELECT TO authenticated USING (is_reviewer());
+CREATE POLICY "Allow reviewer update of form2_steps" ON form2_steps FOR UPDATE TO authenticated USING (is_reviewer());
+CREATE POLICY "Allow reviewer delete of form2_steps" ON form2_steps FOR DELETE TO authenticated USING (is_reviewer());
 
 -- جدول form3_quality_assessment
 CREATE POLICY "Allow public insert to form3" ON form3_quality_assessment FOR INSERT TO anon, authenticated WITH CHECK (true);
 CREATE POLICY "Allow reviewer read of form3" ON form3_quality_assessment FOR SELECT TO authenticated USING (is_reviewer());
+CREATE POLICY "Allow reviewer update of form3" ON form3_quality_assessment FOR UPDATE TO authenticated USING (is_reviewer());
+CREATE POLICY "Allow reviewer delete of form3" ON form3_quality_assessment FOR DELETE TO authenticated USING (is_reviewer());
 
 -- جدول form4_lessons_learned
 CREATE POLICY "Allow public insert to form4" ON form4_lessons_learned FOR INSERT TO anon, authenticated WITH CHECK (true);
 CREATE POLICY "Allow reviewer read of form4" ON form4_lessons_learned FOR SELECT TO authenticated USING (is_reviewer());
+CREATE POLICY "Allow reviewer update of form4" ON form4_lessons_learned FOR UPDATE TO authenticated USING (is_reviewer());
+CREATE POLICY "Allow reviewer delete of form4" ON form4_lessons_learned FOR DELETE TO authenticated USING (is_reviewer());
 
 -- جدول form5_strategic_project_plan
 CREATE POLICY "Allow public insert to form5" ON form5_strategic_project_plan FOR INSERT TO anon, authenticated WITH CHECK (true);
 CREATE POLICY "Allow reviewer read of form5" ON form5_strategic_project_plan FOR SELECT TO authenticated USING (is_reviewer());
+CREATE POLICY "Allow reviewer update of form5" ON form5_strategic_project_plan FOR UPDATE TO authenticated USING (is_reviewer());
+CREATE POLICY "Allow reviewer delete of form5" ON form5_strategic_project_plan FOR DELETE TO authenticated USING (is_reviewer());
+
 
