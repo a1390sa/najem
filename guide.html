@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>الدليل الاسترشادي لتوثيق المعرفة والعمليات الحرجة</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap');
+
+        @page {
+            size: A4 portrait;
+            margin: 18mm 15mm 20mm 15mm;
+            @bottom-left {
+                content: "منصة نجم لإدارة المعرفة";
+                font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+                font-size: 9pt;
+                color: #94a3b8;
+            }
+            @bottom-right {
+                content: "الدليل الاسترشادي لمنسوبي المؤسسة";
+                font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+                font-size: 9pt;
+                color: #94a3b8;
+            }
+            @bottom-center {
+                content: "صفحة " counter(page);
+                font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+                font-size: 9pt;
+                color: #64748b;
+                font-weight: bold;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif;
+            background-color: #ffffff;
+            color: #1e293b;
+            line-height: 1.65;
+            font-size: 11pt;
+            direction: rtl;
+            text-align: right;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+
+        .avoid-break {
+            page-break-inside: avoid;
+        }
+
+        /* ترويسة الغلاف والصفحة الأولى */
+        .header-banner {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #0d9488 100%);
+            color: #ffffff;
+            padding: 24px 28px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 15px rgba(15, 23, 42, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-banner::after {
+            content: "";
+            position: absolute;
+            left: -30px;
+            bottom: -30px;
+            width: 140px;
+            height: 140px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+        }
+
+        .badge-institution {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(5px);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 9.5pt;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .header-title {
+            font-size: 20pt;
+            font-weight: 900;
+            line-height: 1.3;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .header-subtitle {
+            font-size: 11pt;
+            font-weight: 600;
+            color: #93c5fd;
+            line-height: 1.5;
+        }
+
+        .header-meta-bar {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            font-size: 9pt;
+            color: #cbd5e1;
+        }
+
+        /* العناوين والأقسام */
+        .section-title {
+            font-size: 14pt;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 22px 0 12px 0;
+            padding-right: 12px;
+            border-right: 5px solid #1e3a8a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title.accent-title {
+            border-right-color: #0d9488;
+        }
+
+        .section-title.gold-title {
+            border-right-color: #d97706;
+        }
+
+        .lead-paragraph {
+            font-size: 10.5pt;
+            color: #334155;
+            margin-bottom: 14px;
+            line-height: 1.7;
+            text-align: justify;
+        }
+
+        /* بطاقات تنبيه وإيضاح */
+        .concept-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .concept-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .concept-box {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 14px 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .concept-box.blue-box {
+            border-top: 4px solid #1e3a8a;
+            background: #f8fafc;
+        }
+
+        .concept-box.teal-box {
+            border-top: 4px solid #0d9488;
+            background: #f0fdfa;
+        }
+
+        .concept-box h4 {
+            font-size: 11pt;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .concept-box.blue-box h4 { color: #1e3a8a; }
+        .concept-box.teal-box h4 { color: #0d9488; }
+
+        .concept-box p {
+            font-size: 9.5pt;
+            color: #475569;
+            line-height: 1.6;
+        }
+
+        /* الجداول الأنيقة */
+        table.styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0 20px 0;
+            font-size: 9.5pt;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border: 1px solid #cbd5e1;
+        }
+
+        table.styled-table thead tr {
+            background: #1e3a8a;
+            color: #ffffff;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        table.styled-table th, table.styled-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+
+        table.styled-table tbody tr:nth-of-type(even) {
+            background-color: #f8fafc;
+        }
+
+        table.styled-table tbody tr:last-of-type {
+            border-bottom: 2px solid #1e3a8a;
+        }
+
+        .table-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 8.5pt;
+            font-weight: 700;
+        }
+
+        .table-badge.dept {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            border: 1px solid #bae6fd;
+        }
+
+        /* بطاقات العمليات النموذجية */
+        .exemplar-wrapper {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .exemplar-header {
+            padding: 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 800;
+            font-size: 11pt;
+            color: #ffffff;
+        }
+
+        .exemplar-header.explicit-header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #0284c7 100%);
+        }
+
+        .exemplar-header.tacit-header {
+            background: linear-gradient(135deg, #065f46 0%, #0d9488 100%);
+        }
+
+        .exemplar-header .badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 8.5pt;
+        }
+
+        .exemplar-body {
+            padding: 16px 18px;
+        }
+
+        .field-row {
+            display: flex;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #e2e8f0;
+            font-size: 9.5pt;
+        }
+
+        .field-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .field-label {
+            width: 28%;
+            font-weight: 700;
+            color: #475569;
+            flex-shrink: 0;
+        }
+
+        .field-value {
+            width: 72%;
+            color: #0f172a;
+        }
+
+        .steps-list {
+            padding-right: 18px;
+            margin-top: 6px;
+        }
+
+        .steps-list li {
+            margin-bottom: 6px;
+            line-height: 1.55;
+            color: #1e293b;
+        }
+
+        .callout-box {
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 9pt;
+            line-height: 1.6;
+            margin-top: 8px;
+        }
+
+        .callout-box.tip {
+            background-color: #f0fdf4;
+            border-right: 4px solid #16a34a;
+            color: #166534;
+        }
+
+        .callout-box.warn {
+            background-color: #fffbeb;
+            border-right: 4px solid #d97706;
+            color: #92400e;
+        }
+
+        .callout-box.error {
+            background-color: #fef2f2;
+            border-right: 4px solid #dc2626;
+            color: #991b1b;
+        }
+
+        /* الفوتر الختامي */
+        .footer-note {
+            margin-top: 24px;
+            padding: 14px 18px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            font-size: 9pt;
+            color: #475569;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body style="max-width: 960px; margin: 0 auto; padding: 20px;">
+    <!-- شريط الإجراءات العلوي التفاعلي -->
+    <div style="background: #0f172a; color: #ffffff; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 20px;">💡</span>
+            <div>
+                <strong style="font-size: 14px; display: block;">بوابة نجم لإدارة المعرفة</strong>
+                <span style="font-size: 11px; color: #94a3b8;">الدليل الاسترشادي التفاعلي لتوثيق المعرفة والعمليات الحرجة</span>
+            </div>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="/km_guidance_manual_difference_and_exemplars.pdf" download style="background: #0d9488; color: #ffffff; text-decoration: none; padding: 8px 16px; border-radius: 6px; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;">
+                📥 تحميل نسخة PDF الرسمية
+            </a>
+            <a href="/" style="background: #1e3a8a; color: #ffffff; text-decoration: none; padding: 8px 16px; border-radius: 6px; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;">
+                🚀 الانتقال لمنصة تعبئة النماذج
+            </a>
+            <button onclick="window.print()" style="background: #334155; color: #ffffff; border: none; padding: 8px 14px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer;">
+                🖨️ طباعة الدليل
+            </button>
+        </div>
+    </div>
+
+
+    <!-- ==================== الغلاف والترويسة الرئيسية ==================== -->
+    <div class="header-banner">
+        <div class="badge-institution">إدارة المعرفة والابتكار • بوابة نجم الرقمية</div>
+        <h1 class="header-title">الدليل الاسترشادي لتوثيق المعرفة والعمليات الحرجة</h1>
+        <div class="header-subtitle">
+            التفريق بين اسم العملية وعنوان المعرفة • نماذج تطبيقية مكتملة (معرفة صريحة / ضمنية)
+        </div>
+        <div class="header-meta-bar">
+            <span>موجه إلى: كافة منسوبي الإدارات والأقسام بالمؤسسة</span>
+            <span>الهدف السنوي: توثيق 500 معرفة مؤسسية</span>
+            <span>الإصدار: ربيع الآخر 1448هـ / أكتوبر 2026م</span>
+        </div>
+    </div>
+
+    <!-- ==================== القسم الأول: الفرق بين المفهومين ==================== -->
+    <h2 class="section-title">
+        <span>أولاً: ما الفرق بين "اسم العملية الحرجة" و "عنوان المعرفة / الإجراء"؟</span>
+    </h2>
+    <p class="lead-paragraph">
+        يعد التمييز الدقيق بين العملية الحرجة والأصل المعرفي المنبثق عنها من الركائز المهنية لضمان دقة الحصر وتجنب الخلط أثناء تعبئة نماذج إدارة المعرفة (النموذج 1 والنموذج 2). يوضح الشكل والجدول التاليين الحدود الفاصلة بينهما:
+    </p>
+
+    <div class="concept-grid">
+        <div class="concept-box blue-box">
+            <h4>1️⃣ اسم العملية الحرجة (Critical Process)</h4>
+            <p>
+                <strong>ماذا تفعل المؤسسة؟</strong><br>
+                هو النشاط أو المسار التشغيلي الكلي الذي تمارسه الإدارة، وتعتبر "حرجة" لأن تعطلها أو غياب خبرائها يؤدي إلى شلل في العمل، أو خسائر مالية، أو تعطل لخدمات المستفيدين.
+            </p>
+        </div>
+        <div class="concept-box teal-box">
+            <h4>2️⃣ عنوان المعرفة / الإجراء (Knowledge / Procedure)</h4>
+            <p>
+                <strong>كيف ننجز هذا العمل خطوة بخطوة؟</strong><br>
+                هو الأصل المعرفي الموثق والمدون (الدليل، الإجراء، المعيار، أو الآلية المكتوبة) الذي يشرح تفاصيل التنفيذ، وأدواته، وقواعد الخبرة، لضمان استمرارية الجودة بغض النظر عن تغير الموظفين.
+            </p>
+        </div>
+    </div>
+
+    <div class="avoid-break">
+        <h3 style="font-size: 11pt; font-weight: 800; color: #1e3a8a; margin-bottom: 8px;">مصفوفة المقارنة الجوهرية بين المفهومين:</h3>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th style="width: 22%;">وجه المقارنة</th>
+                    <th style="width: 39%;">اسم العملية الحرجة</th>
+                    <th style="width: 39%;">عنوان المعرفة / الإجراء التشغيلي</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>التعريف والماهية</strong></td>
+                    <td>المسار أو النشاط المؤسسي الكلي المستمر داخل الإدارة.</td>
+                    <td>الوثيقة أو الدليل الإجرائي المعرفي الذي يوجه خطوات التنفيذ.</td>
+                </tr>
+                <tr>
+                    <td><strong>السؤال المجاب عنه</strong></td>
+                    <td><strong>ماذا؟</strong> (ما هو النشاط الوظيفي الحيوي الذي تمارسه الإدارة؟)</td>
+                    <td><strong>كيف؟</strong> (كيف نطبق هذا النشاط بدقة وبأعلى معايير الخبرة؟)</td>
+                </tr>
+                <tr>
+                    <td><strong>المستوى الإداري</strong></td>
+                    <td>مستوى كلي، وظيفي، ومؤسسي (Macro Level).</td>
+                    <td>مستوى تفصيلي، تنفيذي، وتطبيقي (Micro Level).</td>
+                </tr>
+                <tr>
+                    <td><strong>علاقة التعدد</strong></td>
+                    <td>العملية الحرجة الواحدة قد يتفرع عنها أكثر من أصل أو إجراء معرفي.</td>
+                    <td>الإجراء يغطي العملية بأكملها أو مرحلة تخصصية بالغة الدقة منها.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="avoid-break">
+        <h3 style="font-size: 11pt; font-weight: 800; color: #1e3a8a; margin-bottom: 8px;">أمثلة مقارنة واقعية من إدارات وأقسام المؤسسة:</h3>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">الإدارة / القسم</th>
+                    <th style="width: 35%;">اسم العملية الحرجة (ماذا؟)</th>
+                    <th style="width: 40%;">عنوان المعرفة / الإجراء (كيف؟)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="table-badge dept">إدارة المنح</span></td>
+                    <td>فرز واعتماد طلبات المنح التنموية والمفاضلة بينها</td>
+                    <td>دليل معايير المفاضلة والفرز الميداني الموزون لمشاريع المنح (QMS-P-14)</td>
+                </tr>
+                <tr>
+                    <td><span class="table-badge dept">إدارة المساجد</span></td>
+                    <td>إدارة ودعم وتأهيل المساجد والمشاريع الخيرية</td>
+                    <td>إجراء الفحص الهندسي والميداني لاستلام أعمال بناء وترميم المساجد (QMS-P-13)</td>
+                </tr>
+                <tr>
+                    <td><span class="table-badge dept">قسم سد الاحتياج</span></td>
+                    <td>الاستجابة لحالات الاحتياج المجتمعي الطارئة</td>
+                    <td>آلية التحقق السريع من أهلية حالات الكرب وسد الاحتياج الفوري</td>
+                </tr>
+                <tr>
+                    <td><span class="table-badge dept">الدعوة والعلم الشرعي</span></td>
+                    <td>تصميم وتنفيذ البرامج والمناشط العلمية والدعوية</td>
+                    <td>معايير تحكيم المحتوى الشرعي واختيار الدعاة والمحاضرين للبرامج</td>
+                </tr>
+                <tr>
+                    <td><span class="table-badge dept">توسيع الأثر وتعزيز القيم</span></td>
+                    <td>بناء الشراكات ورعاية المبادرات القيمية الكبرى</td>
+                    <td>منهجية وتكتيكات استخلاص الاحتياج القيمي وفنون العرض الإقناعي للمانحين</td>
+                </tr>
+                <tr>
+                    <td><span class="table-badge dept">الإدارة المالية</span></td>
+                    <td>صرف الدفعات وإدارة السيولة النقدية والخزينة</td>
+                    <td>إجراء التحقق المستندي والرقابي قبل تحويل دفعات المشاريع المعتمدة (QMS-P-16)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ==================== فواصل وتنظيم الصفحات ==================== -->
+    <div class="page-break"></div>
+
+    <!-- ==================== القسم الثاني: النماذج الاسترشادية المكتملة ==================== -->
+    <h2 class="section-title accent-title">
+        <span>ثانياً: النماذج الاسترشادية المكتملة (معرفة صريحة ومعرفة ضمنية)</span>
+    </h2>
+    <p class="lead-paragraph">
+        نضع بين أيديكم عمليتين نموذجيتين معبأتين بالكامل؛ الأولى تمثل <strong>المعرفة الصريحة</strong> الخاضعة للقواعد المكتوبة، والثانية تمثل <strong>المعرفة الضمنية</strong> المتجذرة في الخبرة والتفاوض الإنساني، للاسترشاد بهما عند تعبئة نماذج المنصة.
+    </p>
+
+    <!-- نموذج 1: معرفة صريحة -->
+    <div class="exemplar-wrapper avoid-break">
+        <div class="exemplar-header explicit-header">
+            <span>📘 النموذج الاسترشادي 1: معرفة صريحة (Explicit Knowledge)</span>
+            <span class="badge">الرقم المرجعي: KM-EXP-001</span>
+        </div>
+        <div class="exemplar-body">
+            <div class="field-row">
+                <div class="field-label">الإدارة / القسم المالك:</div>
+                <div class="field-value"><strong>إدارة المنح / قسم سد الاحتياج / مكتب إدارة المشاريع</strong></div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">اسم العملية الحرجة:</div>
+                <div class="field-value">إجراء المفاضلة والتحكيم الفني لمشاريع سد الاحتياج المجتمعي المستعجل</div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">عنوان المعرفة / الإجراء:</div>
+                <div class="field-value">دليل معايير المفاضلة والفرز الميداني الموزون لمشاريع المنح وسد الاحتياج (QMS-P-14)</div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">الخبير المعتمد والوظيفة:</div>
+                <div class="field-value">رئيس قسم سد الاحتياج (خبرة 9 سنوات في قطاع المنح)</div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">مستوى المخاطرة / الأهمية:</div>
+                <div class="field-value" style="color: #b91c1c; font-weight: bold;">عالية جداً (تأثير مباشر على عدالة وتوزيع أموال المنح)</div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">الهدف المؤسسي:</div>
+                <div class="field-value">ضمان توجيه أموال المنح وسد الاحتياج للجمعيات والمستفيدين الأكثر استحقاقاً وفق مصفوفة تنقيط رقمية موزونة تمنع الاجتهادات الفردية وتلبي متطلبات الحوكمة.</div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">نطاق التطبيق:</div>
+                <div class="field-value">كافة طلبات المنح وسد الاحتياج العاجلة والموسمية الواردة عبر منصة المنح الإلكترونية.</div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">المتطلبات والمدخلات:</div>
+                <div class="field-value">استمارة طلب المنحة، المسح الميداني لسد الاحتياج، الميزانية التقديرية، السجل الائتماني للشريك.</div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">الخطوات الإجرائية التفصيلية:</div>
+                <div class="field-value">
+                    <ol class="steps-list">
+                        <li><strong>الفحص الإداري والأهليّة:</strong> مراجعة ترخيص الجمعية ساري المفعول واكتمال المستندات بنظام المنح خلال 48 ساعة.</li>
+                        <li><strong>التدقيق الميداني والمالي:</strong> مقارنة أسعار بنود الميزانية بأسعار السوق المرجعية وقوائم الأسعار القياسية.</li>
+                        <li><strong>تطبيق مصفوفة التنقيط الموزونة (100 درجة):</strong>
+                            <span style="display: block; font-size: 9pt; color: #475569; margin: 3px 0;">
+                                • شدة الاحتياج وغياب الممول البديل (40%) • كفاءة التكلفة وعائد الأثر لكل مستفيد (25%)<br>
+                                • خبرة وسجل إنجاز الشريك الميداني (20%) • سرعة الجاهزية والبدء الفوري (15%)
+                            </span>
+                        </li>
+                        <li><strong>العرض على لجنة المنح:</strong> تصعيد المشاريع المحققة لـ 75 درجة فأعلى للاعتماد النهائي وتحديد جدول الدفعات.</li>
+                        <li><strong>الإشعار وتوقيع الاتفاقية:</strong> إصدار الموافقة أو الاعتذار الآلي مع إرسال مبررات التحكيم للجهة الشريكة.</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">نصائح الخبراء والأخطاء:</div>
+                <div class="field-value">
+                    <div class="callout-box warn">
+                        ⚠️ <strong>خطأ شائع:</strong> الاكتفاء بالصور ومقاطع الفيديو المرفقة دون مطابقة الإحداثيات الجغرافية عبر الأقمار الصناعية للتأكد من عدم تكرار الدعم لنفس الموقع.
+                    </div>
+                    <div class="callout-box tip">
+                        💡 <strong>نصيحة خبير:</strong> احتساب مؤشر "عائد الريال المجتمعي" بقسمة عدد المستفيدين المباشرين على إجمالي تكلفة المشروع لفرز المشاريع ذات الجدوى القصوى.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== فواصل وتنظيم الصفحات ==================== -->
+    <div class="page-break"></div>
+
+    <!-- نموذج 2: معرفة ضمنية -->
+    <div class="exemplar-wrapper avoid-break">
+        <div class="exemplar-header tacit-header">
+            <span>🧠 النموذج الاسترشادي 2: معرفة ضمنية (Tacit Knowledge)</span>
+            <span class="badge">الرقم المرجعي: KM-TAC-001</span>
+        </div>
+        <div class="exemplar-body">
+            <div class="field-row">
+                <div class="field-label">الإدارة / القسم المالك:</div>
+                <div class="field-value"><strong>قسم تنمية القطاع وتوسيع الأثر / قسم الدعوة إلى الله / قسم تعزيز القيم</strong></div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">اسم العملية الحرجة:</div>
+                <div class="field-value">إقناع كبار المانحين والشركاء الاستراتيجيين بتبني ودعم المبادرات الدعوية والقيمية الكبرى</div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">عنوان المعرفة / الأصل المعرفي:</div>
+                <div class="field-value">منهجية وتكتيكات استخلاص الاحتياج القيمي وفنون العرض الإقناعي للمبادرات النوعية</div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">خبير ومصدر المعرفة:</div>
+                <div class="field-value">مستشار تنمية الموارد وتوسيع الأثر (خبرة 15 عاماً في استقطاب الشراكات الوقفية والدعوية)</div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">مستوى المخاطرة والأهمية:</div>
+                <div class="field-value" style="color: #b91c1c; font-weight: bold;">عالية جداً (فقدان المانح الاستراتيجي يؤدي لتعثر المبادرات المجتمعية النوعية)</div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">طبيعة ومكمن الخبرة الضمنية:</div>
+                <div class="field-value">
+                    القدرة على "قراءة شخصية واهتمامات المانح"، وتحويل المفاهيم القيمية والدعوية المجردة (مثل: بر الوالدين، إحياء السنن، الأمانة) إلى مشروعات مجتمعية ذات أثر إنساني ملموس وقصص ملهمة تلامس وجدان الداعم.
+                </div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">قواعد الخبراء الذهبية (تكتيكات التفاوض الإقناعي):</div>
+                <div class="field-value">
+                    <ul class="steps-list">
+                        <li><strong>قاعدة "الاستشارة قبل الاستمارة":</strong> في اللقاء الأول لا تطلب دعماً مالياً مطلقاً؛ بل اطلب مشورة المانح ورأيه في فكرة المبادرة. إشراك المانح في بناء الفكرة يجعله يشعر بأنه "شريك مؤسس" فيدافع عنها ويدعمها بسخاء.</li>
+                        <li><strong>سرد قصة الأثر الإنساني (Storytelling):</strong> ابدأ العرض دائماً بعرض حالة واقعية وقصة حقيقية لشاب أو أسرة تغير سلوكها بفضل البرنامج القيمي، وتجنب الإغراق في لغة الوعظ المجردة أو الأرقام الجافة.</li>
+                        <li><strong>باقات الرعاية المرنة:</strong> اعرض 3 خيارات للدعم (الماسي، الذهبي، الفضي) ليختار المانح ما يناسب ميزانيته دون أن يشعر بالحرج أو الإلزام برقم محدد.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">الأخطاء القاتلة التي يقع فيها غير الخبراء:</div>
+                <div class="field-value">
+                    <div class="callout-box error">
+                        🚫 <strong>الخطأ 1:</strong> التحدث عن عجز الميزانية وتكاليف الرواتب والتشغيل في أول 10 دقائق من اللقاء قبل بناء الثقة وعرض أثر المبادرة.
+                    </div>
+                    <div class="callout-box error" style="margin-top: 5px;">
+                        🚫 <strong>الخطأ 2:</strong> الإفراط في المصطلحات الإدارية المعقدة أو التبريرات النظرية التي تُشعر المانح بانفصال المشروع عن الواقع الميداني.
+                    </div>
+                </div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">آلية نقل وتوريث المعرفة الضمنية:</div>
+                <div class="field-value">
+                    1. إقامة ورش محاكاة تمثيلية (Role-Playing) داخل القسم للتدرب على أصعب أسئلة المانحين.<br>
+                    2. مرافقة الموظف الجديد للخبير في 4 لقاءات تفاوضية ميدانية (استماع وملاحظة فقط) قبل تمكينه من إدارة أي لقاء مستقل.<br>
+                    3. تدوين "سجل الدروس المستفادة" فور انتهاء كل اجتماع مانح لتحديث تكتيكات العرض.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== القسم الثالث: إرشادات التوثيق ==================== -->
+    <div class="avoid-break" style="margin-top: 15px;">
+        <h2 class="section-title gold-title">
+            <span>ثالثاً: وصايا ذهبية لمنسوبي المؤسسة عند تعبئة نماذج المنصة</span>
+        </h2>
+        <div class="concept-card">
+            <ul style="padding-right: 20px; line-height: 1.8; font-size: 9.5pt; color: #334155;">
+                <li><strong>الدقة والوضوح:</strong> احرص على صياغة خطوات الإجراء بصيغة الفعل المضارع المحدد (مثال: "يتحقق مسؤول الفرز من..."، "يُطابق المحاسب بنود...").</li>
+                <li><strong>الشمولية دون إطالة:</strong> اذكر المتطلبات والأدوات المرتبطة بالإجراء ليكون الدليل كافياً لأي موظف بديل لتنفيذ العمل دون تعطل.</li>
+                <li><strong>التركيز على مكمن الخطورة:</strong> وضّح مستوى أهمية العملية ومخاطر توقفها لتتمكن المؤسسة من وضع خطط الإنابة والاستخلاف الوظيفي الملائمة.</li>
+                <li><strong>استشارة فريق إدارة المعرفة:</strong> إذا واجهت حيرة في تحديد ما إذا كانت المعرفة صريحة أو ضمنية، فإن فريق إدارة المعرفة يسعد بتقديم جلسات الدعم والمراجعة الفنية.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-note avoid-break">
+        <strong>معاً لتحقيق هدفنا المؤسسي: توثيق 500 معرفة قبل نهاية العام بإذن الله</strong><br>
+        منصة نجم الإلكترونية لإدارة المعرفة • إدارة المعرفة والابتكار • 2026م
+    </div>
+
+</body>
+</html>
